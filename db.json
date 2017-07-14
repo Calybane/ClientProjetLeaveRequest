@@ -1,0 +1,42 @@
+{
+  "leaveRequests": [
+    {
+      "id": 1,
+      "personId":3,
+      "typeAbsence": "annual",
+      "leaveFromDate": "2017-04-23T18:25:43.511Z",
+      "leaveToDate": "2017-04-28T18:25:43.511Z",
+      "daysTaken": 2,
+      "requestDate": "2017-04-21T18:25:43.511Z",
+      "approval": "2017-04-22T18:25:43.511Z"
+    },
+    {
+      "id": 2,
+      "personId":3,
+      "typeAbsence": "annual",
+      "leaveFromDate": "2017-04-23T18:25:43.511Z",
+      "leaveToDate": "2017-04-28T18:25:43.511Z",
+      "daysTaken": 4,
+      "requestDate": "2017-04-21T18:25:43.511Z",
+      "approval": "2017-04-22T18:25:43.511Z"
+    },
+    {
+      "id": 3,
+      "personId":3,
+      "typeAbsence": "special",
+      "leaveFromDate": "2017-04-23T18:25:43.511Z",
+      "leaveToDate": "2017-04-28T18:25:43.511Z",
+      "daysTaken": 10,
+      "requestDate": "2017-04-21T18:25:43.511Z",
+      "approval": "2017-04-22T18:25:43.511Z"
+    }
+  ],
+  "persons":[
+    {
+      "id":3,
+      "lastname":"Doe",
+      "firstname":"John",
+      "daysLeft":34
+    }
+  ]
+}
