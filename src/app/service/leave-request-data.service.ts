@@ -8,24 +8,28 @@ export class LeaveRequestDataService {
 
   constructor(private apiLeaveRequest: ApiLeaveRequestService) { }
 
-  addLeaveRequest(leaveRequest: LeaveRequest): Observable<LeaveRequest> {
-    return this.apiLeaveRequest.createLeaveRequest(leaveRequest);
-  }
-
-  deleteLeaveRequestByPersonAndDate(requestId: number): Observable<LeaveRequest> {
-    return this.apiLeaveRequest.deleteLeaveRequestById(requestId)
-  }
-
-  updateLeaveRequestById(request: LeaveRequest): Observable<LeaveRequest> {
-    return this.apiLeaveRequest.updateLeaveRequest(request);
-  }
-
   getAllLeaveRequests(): Observable<LeaveRequest[]> {
     return this.apiLeaveRequest.getAllLeaveRequest();
   }
 
   getLeaveRequestById(requestId: number): Observable<LeaveRequest> {
     return this.apiLeaveRequest.getLeaveRequestById(requestId);
+  }
+
+  getAllLeaveRequestsByPersonId(personId: number): Observable<LeaveRequest[]> {
+    return this.apiLeaveRequest.getAllLeaveRequestByPersonId(personId);
+  }
+
+  createLeaveRequest(leaveRequest: LeaveRequest): Observable<LeaveRequest> {
+    return this.apiLeaveRequest.createLeaveRequest(leaveRequest);
+  }
+
+  deleteLeaveRequestById(requestId: number): Observable<LeaveRequest> {
+    return this.apiLeaveRequest.deleteLeaveRequestById(requestId)
+  }
+
+  updateLeaveRequestById(request: LeaveRequest): Observable<LeaveRequest> {
+    return this.apiLeaveRequest.updateLeaveRequest(request);
   }
 
 }

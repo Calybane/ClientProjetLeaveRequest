@@ -4,8 +4,11 @@ export class Person {
   firstname: string;
   daysLeft: number;
 
-  constructor(id: number) {
-    this.id = id;
+  constructor(values: Object = {}) {
+    this.lastname = '';
+    this.firstname = '';
+
+    Object.assign(this, values);
   }
 
   getId(): number {

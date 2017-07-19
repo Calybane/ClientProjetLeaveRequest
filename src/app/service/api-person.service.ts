@@ -25,14 +25,14 @@ export class ApiPersonService {
                     .catch(this.handleError);
   }
 
-  public createPerson(person: Person): Observable<Person> {
-    return this.http.post(API_URL + '/persons', person)
-                    .map(response => new Person(response.json()))
-                    .catch(this.handleError);
-  }
-
   public getPersonById(personId: number): Observable<Person> {
     return this.http.get(API_URL + '/persons/' + personId)
+      .map(response => new Person(response.json()) )
+      .catch(this.handleError);
+  }
+
+  public createPerson(person: Person): Observable<Person> {
+    return this.http.post(API_URL + '/persons', person)
                     .map(response => new Person(response.json()))
                     .catch(this.handleError);
   }

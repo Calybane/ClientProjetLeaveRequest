@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { Person } from '../model/person';
+import {Injectable, OnInit} from '@angular/core';
 import {environment} from 'environments/environment';
 
 const API_URL = environment.apiUrl;
@@ -7,25 +6,12 @@ const API_URL = environment.apiUrl;
 @Injectable()
 export class SharedDataService {
 
-  person: Person;
+  typeAbsence: Map<string, string>;
 
   constructor() {
-  }
-
-  getPersonId(): number {
-    return this.person.getId();
-  }
-
-  getPersonDaysLeft(): number {
-    return this.person.getDaysLeft();
-  }
-
-  getPerson(): Person {
-    return this.person;
-  }
-
-  setPerson(person: Person): void {
-    this.person = person;
+    this.typeAbsence = new Map<string, string>();
+    this.typeAbsence.set('Annual leave', 'Annual leave');
+    this.typeAbsence.set('Special leave', 'Special leave *');
   }
 
 }

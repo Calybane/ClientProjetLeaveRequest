@@ -12,10 +12,12 @@ ul{
 }
 div.row.container{
   padding: 0;
+  width: 100%;
 }
 body{
   font-size: 1.6em;
   bottom: 0;
+  background-color: #e6e6e6;
 }
 .page-left{
   padding: 1px 0 0;

@@ -1,20 +1,25 @@
 import { Routes } from '@angular/router';
-import { LeaveRequestComponent } from './widget/LeaveRequest/leave-request.component';
+import { LeaveRequestComponent } from './widget/leaveRequest/leave-request.component';
+import { ListRequestsComponent } from './widget/listRequests/list-requests.component';
 import { HomeComponent } from './widget/home/home.component';
 
 
 export const ROUTES: Routes = [
   {
     path: '',
-    redirectTo: '/demand',
+    redirectTo: '/request',
     pathMatch: 'full'
   },
   {
-    path: 'demand',
+    path: 'request',
     component: LeaveRequestComponent
   },
   {
     path: 'home',
     component: HomeComponent
+  },
+  {
+    path: 'list',
+    component: ListRequestsComponent
   }
 ];

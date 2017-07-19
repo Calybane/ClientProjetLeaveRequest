@@ -2,41 +2,55 @@
   "leaveRequests": [
     {
       "id": 1,
-      "personId":3,
-      "typeAbsence": "annual",
-      "leaveFromDate": "2017-04-23T18:25:43.511Z",
-      "leaveToDate": "2017-04-28T18:25:43.511Z",
+      "personId": 3,
+      "typeAbsence": "Special leave",
+      "leaveFrom": "2017-06-22T18:25:43.511Z",
+      "leaveTo": "2017-06-20T18:25:43.511Z",
       "daysTaken": 2,
       "requestDate": "2017-04-21T18:25:43.511Z",
-      "approval": "2017-04-22T18:25:43.511Z"
+      "approvalDate": "2017-04-22T18:25:43.511Z",
+      "status": "Validated"
     },
     {
       "id": 2,
-      "personId":3,
-      "typeAbsence": "annual",
-      "leaveFromDate": "2017-04-23T18:25:43.511Z",
-      "leaveToDate": "2017-04-28T18:25:43.511Z",
+      "personId": 3,
+      "typeAbsence": "Annual leave",
+      "leaveFrom": "2017-04-23T18:25:43.511Z",
+      "leaveTo": "2017-04-28T18:25:43.511Z",
       "daysTaken": 4,
       "requestDate": "2017-04-21T18:25:43.511Z",
-      "approval": "2017-04-22T18:25:43.511Z"
+      "approvalDate": "2017-04-22T18:25:43.511Z",
+      "status": "Validated"
     },
     {
       "id": 3,
-      "personId":3,
-      "typeAbsence": "special",
-      "leaveFromDate": "2017-04-23T18:25:43.511Z",
-      "leaveToDate": "2017-04-28T18:25:43.511Z",
+      "personId": 3,
+      "typeAbsence": "Special leave",
+      "leaveFrom": "2017-04-23T18:25:43.511Z",
+      "leaveTo": "2017-04-28T18:25:43.511Z",
       "daysTaken": 10,
       "requestDate": "2017-04-21T18:25:43.511Z",
-      "approval": "2017-04-22T18:25:43.511Z"
+      "approvalDate": "2017-04-22T18:25:43.511Z",
+      "status": "Validated"
+    },
+    {
+      "leaveFrom": "2017-07-19T12:49:05.884Z",
+      "leaveTo": "2017-07-19T12:49:05.884Z",
+      "daysTaken": 1,
+      "requestDate": "2017-07-18T12:49:05.884Z",
+      "approvalDate": null,
+      "typeAbsence": "Annual leave",
+      "status": "Waiting for validation",
+      "personId": 3,
+      "id": 4
     }
   ],
-  "persons":[
+  "persons": [
     {
-      "id":3,
-      "lastname":"Doe",
-      "firstname":"John",
-      "daysLeft":34
+      "id": 3,
+      "lastname": "Doe",
+      "firstname": "John",
+      "daysLeft": 34
     }
   ]
 }

@@ -5,3 +5,9 @@ div.header{
 .navbar{
   margin-bottom: 0;
 }
+ul.dropdown-menu > li > a{
+  font-size: 1.1em;
+}
+.navbar-brand{
+  font-size: 1.3em;
+}

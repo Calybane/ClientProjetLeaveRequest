@@ -1,19 +1,9 @@
-<div>
+<div class="leaverequest-div">
   <h2>Leave of absence - Request form</h2>
 
   <br>
 
-  <form (ngSubmit)="onSubmit()" ngNativeValidate>
-
-    <div class="form-group">
-      <label for="lastname">Lastname :</label><br>
-      <input type="text" id="lastname" name="lastname" class="form-control" [(ngModel)]="leaveRequest.lastname" required>
-    </div>
-
-    <div class="form-group">
-      <label for="firstname">Firstname :</label><br>
-      <input type="text" id="firstname" name="firstname" class="form-control" [(ngModel)]="leaveRequest.firstname" required>
-    </div>
+  <form #f="ngForm" (ngSubmit)="onSubmit()" ngNativeValidate class="formRequest row">
 
     <div class="form-group">
       <label>Please choose type of absence :</label><br>
@@ -30,17 +20,17 @@
         <div class="col-sm-6 nopadding">
           <label>From :</label>
           <br>
-          <p-calendar dateFormat="dd/mm/yy" name="startDate" [(ngModel)]="leaveRequest.leaveFromDate" [minDate]="minDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="2017:2030" required></p-calendar>
+          <p-calendar dateFormat="dd/mm/yy" name="startDate" [(ngModel)]="leaveRequest.leaveFrom" [minDate]="minDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="2017:2030" required></p-calendar>
         </div>
 
         <div class="col-sm-6 nopadding">
           <label>To (incl.) :</label>
           <br>
-          <p-calendar dateFormat="dd/mm/yy" name="endDate" [(ngModel)]="leaveRequest.leaveToDate" [minDate]="leaveRequest.leaveFromDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="2017:2030" required></p-calendar>
+          <p-calendar dateFormat="dd/mm/yy" name="endDate" [(ngModel)]="leaveRequest.leaveTo" [minDate]="leaveRequest.leaveFrom" [monthNavigator]="true" [yearNavigator]="true" yearRange="2017:2030" required></p-calendar>
         </div>
       </div>
 
-      <div *ngIf="leaveRequest.leaveFromDate > leaveRequest.leaveToDate">
+      <div *ngIf="leaveRequest.leaveFrom > leaveRequest.leaveTo">
         <br>
         <div class="alert alert-danger">
           <strong>Attention!</strong> The start date can't be after the end date.
@@ -54,7 +44,7 @@
     </div>
 
     <div class="form-group">
-      <label>Number of annual leave days left :</label> {{daysTotal - leaveRequest.daysTaken}}
+      <label>Number of annual leave days left :</label> {{daysTotal - leaveRequest.daysTaken | number:'1.0'}}
     </div>
 
     <hr>
@@ -66,8 +56,6 @@
           {{leaveRequest.requestDate | date : 'fullDate'}}
         </div>
 
-        <div class="col-xs-12"><br></div>
-
         <div class="col-sm-6 nopadding">
           <label>signature - employee :</label><br>
           signature temp
@@ -77,9 +65,7 @@
 
     <div class="col-xs-12"><br></div>
 
-    <button type="submit" class="btn btn-default pull-right">Submit request</button>
-
-    <div class="col-xs-12"></div>
+    <button type="submit" class="btn btn-default btn-lg pull-right" [disabled]="f.invalid">Submit request</button>
 
   </form>
 
