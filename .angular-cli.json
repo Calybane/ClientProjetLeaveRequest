@@ -25,6 +25,7 @@
         "../node_modules/primeng/resources/themes/bootstrap/theme.css"
       ],
       "scripts": [
+        "../node_modules/jspdf/dist/jspdf.min.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
