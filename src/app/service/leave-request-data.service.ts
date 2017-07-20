@@ -16,8 +16,17 @@ export class LeaveRequestDataService {
 
   constructor(private http: Http) { }
 
-  public getAllLeaveRequest(): Observable<LeaveRequest[]> {
+  public getAllLeaveRequests(): Observable<LeaveRequest[]> {
     return this.http.get(API_URL + '/api/leaverequest')
+      .map(response => {
+        const requests = response.json();
+        return requests.map(request => new LeaveRequest(request));
+      })
+      .catch(this.handleError);
+  }
+
+  public getAllLeaveRequestsInWaiting(): Observable<LeaveRequest[]> {
+    return this.http.get(API_URL + '/api/leaverequest/waiting')
       .map(response => {
         const requests = response.json();
         return requests.map(request => new LeaveRequest(request));
@@ -31,8 +40,8 @@ export class LeaveRequestDataService {
       .catch(this.handleError);
   }
 
-  public getAllLeaveRequestByPersonId(personId: number): Observable<LeaveRequest[]> {
-    return this.http.get(API_URL + '/api/leaverequest')
+  public getAllLeaveRequestsByPersonId(personId: number): Observable<LeaveRequest[]> {
+    return this.http.get(API_URL + '/api/leaverequest/person/' + personId)
       .map(response => {
         const requests = response.json();
         return requests.map(request => new LeaveRequest(request));
