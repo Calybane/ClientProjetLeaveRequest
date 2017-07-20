@@ -19,13 +19,14 @@
             Leave of absence <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
-            <li><a class="link" routerLink="/request">Leave Request</a></li>
-            <li><a class="link" routerLink="/list">List of requests</a></li>
+            <li><a class="link" routerLink="/request">Leave Request Form</a></li>
+            <li><a class="link" routerLink="/list">List of my requests</a></li>
+            <li *ngIf="person.role === 'admin'"><a class="link" routerLink="/approval">Requests for approval</a></li>
           </ul>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li class="hidden-xs"><a routerLink="/"><span class="glyphicon glyphicon-user"></span> Hello {{person.firstname}} {{person.lastname}} !</a></li>
+        <!--<li class="hidden-xs"><a routerLink="/"><span class="glyphicon glyphicon-user"></span> Hello {{person.firstname}} {{person.lastname}} !</a></li>-->
         <li><a routerLink="/"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->

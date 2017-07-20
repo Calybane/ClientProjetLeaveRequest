@@ -3,8 +3,9 @@
 export const environment = {
   production: true,
 
-  // URL of production API
-  apiUrl: 'http://localhost:7878'
+  // URL of development API on db.json
+  // apiUrl: 'http://localhost:7878'
 
-  // apiUrl: 'http://localhost:8070'
+  // URL of spring boot server
+  apiUrl: 'http://localhost:4200'
 };

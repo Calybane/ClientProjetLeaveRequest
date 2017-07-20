@@ -1,35 +1,78 @@
 import { Injectable } from '@angular/core';
+import { Http } from '@angular/http';
+import { environment } from 'environments/environment';
+
 import { LeaveRequest } from '../model/leave-request';
-import { ApiLeaveRequestService } from '../service/api-leave-request.service';
 import { Observable } from 'rxjs/Observable';
+
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/throw';
+
+const API_URL = environment.apiUrl;
 
 @Injectable()
 export class LeaveRequestDataService {
 
-  constructor(private apiLeaveRequest: ApiLeaveRequestService) { }
+  constructor(private http: Http) { }
 
-  getAllLeaveRequests(): Observable<LeaveRequest[]> {
-    return this.apiLeaveRequest.getAllLeaveRequest();
+  public getAllLeaveRequest(): Observable<LeaveRequest[]> {
+    return this.http.get(API_URL + '/api/leaverequest')
+      .map(response => {
+        const requests = response.json();
+        return requests.map(request => new LeaveRequest(request));
+      })
+      .catch(this.handleError);
   }
 
-  getLeaveRequestById(requestId: number): Observable<LeaveRequest> {
-    return this.apiLeaveRequest.getLeaveRequestById(requestId);
+  public getLeaveRequestById(requestId: number): Observable<LeaveRequest> {
+    return this.http.get(API_URL + '/api/leaverequest/' + requestId)
+      .map(response => new LeaveRequest(response.json()))
+      .catch(this.handleError);
   }
 
-  getAllLeaveRequestsByPersonId(personId: number): Observable<LeaveRequest[]> {
-    return this.apiLeaveRequest.getAllLeaveRequestByPersonId(personId);
+  public getAllLeaveRequestByPersonId(personId: number): Observable<LeaveRequest[]> {
+    return this.http.get(API_URL + '/api/leaverequest')
+      .map(response => {
+        const requests = response.json();
+        return requests.map(request => new LeaveRequest(request));
+      })
+      .catch(this.handleError);
   }
 
-  createLeaveRequest(leaveRequest: LeaveRequest): Observable<LeaveRequest> {
-    return this.apiLeaveRequest.createLeaveRequest(leaveRequest);
+  public createLeaveRequest(request: LeaveRequest): Observable<LeaveRequest> {
+    return this.http.post(API_URL + '/api/leaverequest', request)
+      .map(response => new LeaveRequest(response.json()))
+      .catch(this.handleError);
   }
 
-  deleteLeaveRequestById(requestId: number): Observable<LeaveRequest> {
-    return this.apiLeaveRequest.deleteLeaveRequestById(requestId)
+  public updateLeaveRequest(request: LeaveRequest): Observable<LeaveRequest> {
+    return this.http.put(API_URL + '/api/leaverequest/' + request.id, request)
+      .map(response => new LeaveRequest(response.json()))
+      .catch(this.handleError);
   }
 
-  updateLeaveRequestById(request: LeaveRequest): Observable<LeaveRequest> {
-    return this.apiLeaveRequest.updateLeaveRequest(request);
+  public deleteLeaveRequestById(requestId: number): Observable<null> {
+    return this.http.delete(API_URL + '/api/leaverequest/' + requestId)
+      .map(response => null)
+      .catch(this.handleError);
+  }
+
+  public approvedLeaveRequest(request: LeaveRequest): Observable<LeaveRequest> {
+    return this.http.put(API_URL + '/api/leaverequest/' + request.id + '/changestatus/approved', request)
+      .map(response => new LeaveRequest(response.json()))
+      .catch(this.handleError);
+  }
+
+  public rejectedLeaveRequest(request: LeaveRequest): Observable<LeaveRequest> {
+    return this.http.put(API_URL + '/api/leaverequest/' + request.id + '/changestatus/rejected', request)
+      .map(response => new LeaveRequest(response.json()))
+      .catch(this.handleError);
+  }
+
+  private handleError (error: Response | any) {
+    console.error('ApiLeaveRequestService::handleError', error);
+    return Observable.throw(error);
   }
 
 }

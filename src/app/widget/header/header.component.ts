@@ -15,7 +15,7 @@ export class HeaderComponent implements OnInit {
   constructor(private personService: PersonDataService) { }
 
   ngOnInit() {
-    this.personService.getPersonById(3).subscribe((person) => {
+    this.personService.getPersonById(1).subscribe((person) => {
       this.person = person;
     });
   }

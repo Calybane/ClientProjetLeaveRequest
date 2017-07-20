@@ -67,11 +67,7 @@
     "no-var-keyword": true,
     "object-literal-sort-keys": false,
     "one-line": [
-      true,
-      "check-open-brace",
-      "check-catch",
-      "check-else",
-      "check-whitespace"
+      false
     ],
     "prefer-const": true,
     "quotemark": [

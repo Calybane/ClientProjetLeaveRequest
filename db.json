@@ -9,7 +9,7 @@
       "daysTaken": 2,
       "requestDate": "2017-04-21T18:25:43.511Z",
       "approvalDate": "2017-04-22T18:25:43.511Z",
-      "status": "Validated"
+      "status": "Approved"
     },
     {
       "id": 2,
@@ -20,7 +20,7 @@
       "daysTaken": 4,
       "requestDate": "2017-04-21T18:25:43.511Z",
       "approvalDate": "2017-04-22T18:25:43.511Z",
-      "status": "Validated"
+      "status": "Approved"
     },
     {
       "id": 3,
@@ -31,7 +31,7 @@
       "daysTaken": 10,
       "requestDate": "2017-04-21T18:25:43.511Z",
       "approvalDate": "2017-04-22T18:25:43.511Z",
-      "status": "Validated"
+      "status": "Approved"
     },
     {
       "leaveFrom": "2017-07-19T12:49:05.884Z",
@@ -40,9 +40,20 @@
       "requestDate": "2017-07-18T12:49:05.884Z",
       "approvalDate": null,
       "typeAbsence": "Annual leave",
-      "status": "Waiting for validation",
+      "status": "Waiting for approval",
       "personId": 3,
       "id": 4
+    },
+    {
+      "leaveFrom": "2017-07-26T22:00:00.000Z",
+      "leaveTo": "2017-07-26T22:00:00.000Z",
+      "daysTaken": 1,
+      "requestDate": "2017-07-19T06:23:01.327Z",
+      "approvalDate": null,
+      "status": "Waiting for approval",
+      "typeAbsence": "Annual leave",
+      "personId": 3,
+      "id": 5
     }
   ],
   "persons": [
@@ -50,7 +61,8 @@
       "id": 3,
       "lastname": "Doe",
       "firstname": "John",
-      "daysLeft": 34
+      "daysLeft": 34,
+      "role": "admin"
     }
   ]
 }

@@ -1,10 +1,10 @@
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-import {LeaveRequest} from '../../model/leave-request';
-import {Person} from '../../model/person';
-import {SelectItem} from 'primeng/primeng';
-import {LeaveRequestDataService} from '../../service/leave-request-data.service';
-import {PersonDataService} from '../../service/person-data.service';
-import {SharedDataService} from '../../service/shared-data.service';
+import { Component, OnInit } from '@angular/core';
+import { LeaveRequest } from '../../model/leave-request';
+import { Person } from '../../model/person';
+import { SelectItem } from 'primeng/primeng';
+import { LeaveRequestDataService } from '../../service/leave-request-data.service';
+import { PersonDataService } from '../../service/person-data.service';
+import { SharedDataService } from '../../service/shared-data.service';
 
 @Component({
   selector: 'app-leave-request',
@@ -15,18 +15,38 @@ import {SharedDataService} from '../../service/shared-data.service';
 
 export class LeaveRequestComponent implements OnInit {
 
+  en: any;
+
   minDate: Date;
+  maxDate: Date;
   showWellSpecial: boolean;
   daysTotal: number;
   types: SelectItem[];
+
+  disabledDates: Date[];
 
   person: Person;
 
   leaveRequest: LeaveRequest = new LeaveRequest();
 
-  constructor(private leaveRequestDataService: LeaveRequestDataService, private personService: PersonDataService, private sharedService: SharedDataService) {}
+  constructor(private leaveRequestDataService: LeaveRequestDataService, private personService: PersonDataService, private leaveRequestService: LeaveRequestDataService, private sharedService: SharedDataService) {
+    this.disabledDates = new Array<Date>();
+    this.leaveRequestService.getAllLeaveRequestByPersonId(1).subscribe(requests => {
+      requests.forEach(request => {
+        let i = 0;
+        const currentDate: Date = new Date(request.leaveFrom);
+        const stopDate: Date = new Date(request.leaveTo);
+        while (currentDate <= stopDate && i < 100) {
+          this.disabledDates.push(new Date(currentDate));
+          currentDate.setDate(currentDate.getDate() + 1);
+          ++i;
+        }
+      });
+    });
+  }
 
   ngOnInit() {
+    this.en = { firstDayOfWeek: 0 };
     this.types = [];
     this.sharedService.typeAbsence.forEach((key: string, value: string) => {
       this.types.push({label: key, value: value});
@@ -37,7 +57,7 @@ export class LeaveRequestComponent implements OnInit {
     this.minDate = new Date();
     this.minDate.setDate(this.leaveRequest.leaveFrom.getDate());
 
-    this.personService.getPersonById(3).subscribe(person => {
+    this.personService.getPersonById(1).subscribe(person => {
       this.person = person;
       this.daysTotal = this.person.getDaysLeft();
       this.leaveRequest.personId = this.person.getId();
@@ -45,9 +65,14 @@ export class LeaveRequestComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.leaveRequestValid()) {
+    if (this.leaveRequestValid())
+    {
       this.createLeaveRequest();
       console.log('Request submited');
+    }
+    else
+    {
+      console.log('Leave Request not valid');
     }
   }
 
@@ -73,4 +98,31 @@ export class LeaveRequestComponent implements OnInit {
       && this.leaveRequest.daysTaken <= this.daysTotal
       && this.sharedService.typeAbsence.get(this.leaveRequest.typeAbsence) != null;
   }
+
+  selectedDate(): void {
+    let i = 0;
+    let nb = 0;
+    const currentDate: Date = new Date(this.leaveRequest.leaveFrom);
+    const endDate: Date = new Date(this.leaveRequest.leaveTo);
+    while (currentDate <= endDate && i < 100) {
+      // depend of first day of week. here, first day is Sunday == 0 and Saturday == 6
+      if (currentDate.getDay() > 0 && currentDate.getDay() < 6) {
+        ++nb;
+      }
+      currentDate.setDate(currentDate.getDate() + 1);
+      ++i;
+    }
+    this.leaveRequest.daysTaken = nb;
+  }
+
+  /*
+  changeMaxDate(): void {
+    this.maxDate = new Date();
+    let i = 0;
+    while (i < this.daysTotal) {
+      ++i;
+      this.maxDate.setDate(this.maxDate.getDate() + i)
+    }
+  }
+  */
 }

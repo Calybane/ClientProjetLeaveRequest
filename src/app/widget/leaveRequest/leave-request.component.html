@@ -20,13 +20,13 @@
         <div class="col-sm-6 nopadding">
           <label>From :</label>
           <br>
-          <p-calendar dateFormat="dd/mm/yy" name="startDate" [(ngModel)]="leaveRequest.leaveFrom" [minDate]="minDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="2017:2030" required></p-calendar>
+          <p-calendar dateFormat="dd/mm/yy" name="startDate" [disabledDays]="[0,6]" (onClose)="selectedDate(); changeMaxDate()" [disabledDates]="disabledDates" [(ngModel)]="leaveRequest.leaveFrom" [minDate]="minDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="2017:2030" required></p-calendar>
         </div>
 
         <div class="col-sm-6 nopadding">
           <label>To (incl.) :</label>
           <br>
-          <p-calendar dateFormat="dd/mm/yy" name="endDate" [(ngModel)]="leaveRequest.leaveTo" [minDate]="leaveRequest.leaveFrom" [monthNavigator]="true" [yearNavigator]="true" yearRange="2017:2030" required></p-calendar>
+          <p-calendar dateFormat="dd/mm/yy" name="endDate" [disabledDays]="[0,6]" (onClose)="selectedDate()" [disabledDates]="disabledDates" [(ngModel)]="leaveRequest.leaveTo" [minDate]="leaveRequest.leaveFrom" [monthNavigator]="true" [yearNavigator]="true" yearRange="2017:2030" required></p-calendar>
         </div>
       </div>
 
@@ -39,12 +39,11 @@
     </div>
 
     <div class="form-group">
-      <label for="daysTaken">Number of days taken :</label>
-      <input type="number" id="daysTaken" name="daysTaken" class="form-control" [(ngModel)]="leaveRequest.daysTaken" min="1" max="{{daysTotal}}" required>
+      <label>Number of days taken :</label> {{leaveRequest.daysTaken}}
     </div>
 
     <div class="form-group">
-      <label>Number of annual leave days left :</label> {{daysTotal - leaveRequest.daysTaken | number:'1.0'}}
+      <label>Number of annual leave days left :</label> {{daysTotal - leaveRequest.daysTaken}}
     </div>
 
     <hr>

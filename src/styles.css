@@ -17,7 +17,7 @@ div.row.container{
 body{
   font-size: 1.6em;
   bottom: 0;
-  background-color: #e6e6e6;
+  background-color: #f9f9f9;
 }
 .page-left{
   padding: 1px 0 0;
@@ -25,4 +25,35 @@ body{
 }
 .page-right{
   padding-bottom: 30px;
+}
+@media (max-width: 767px) {
+  tbody {
+    font-size: 0.8em;
+  }
+}
+body .override-primeng-datatable .ui-datatable .ui-datatable-data > tr > td,
+body .override-primeng-datatable .ui-datatable .ui-datatable-thead > tr > th {
+  padding-left: 5px;
+  padding-right: 5px;
+  text-align: center;
+}
+body .override-primeng-datatable .ui-datatable thead th.ui-state-active {
+  background-color: #696969;
+  border-color: transparent;
+  color: #ffffff;
+}
+.btn {
+ margin: 5px;
+}
+div .div-request-info {
+  text-align: left;
+  font-size:16px;
+  padding: 5px 20px;
+}
+.navbar-brand{
+  padding-top: 13.5px;
+}
+.navbar-inverse .navbar-brand, .navbar-inverse ul.nav.navbar-nav>li>a {
+  color: #f9f9f9 !important;
+  font-size: 1.1em;
 }

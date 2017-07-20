@@ -18,7 +18,7 @@ export class LeaveRequest {
     this.daysTaken = 1;
     this.requestDate = new Date();
     this.approvalDate = null;
-    this.status = 'Waiting for validation'
+    this.status = 'Waiting for approval'
 
     Object.assign(this, values);
   }

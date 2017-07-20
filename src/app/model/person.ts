@@ -3,6 +3,7 @@ export class Person {
   lastname: string;
   firstname: string;
   daysLeft: number;
+  role: string;
 
   constructor(values: Object = {}) {
     this.lastname = '';
@@ -25,6 +26,10 @@ export class Person {
 
   getDaysLeft(): number {
     return this.daysLeft;
+  }
+
+  getRole(): string {
+    return this.role;
   }
 
 }
