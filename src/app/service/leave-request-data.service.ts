@@ -25,6 +25,15 @@ export class LeaveRequestDataService {
       .catch(this.handleError);
   }
 
+  public getAllTypesAbsence(): Observable<string[]> {
+    return this.http.get(API_URL + '/api/leaverequest/typesabsence')
+      .map(response => {
+        const requests = response.json();
+        return requests.map(request => request);
+      })
+      .catch(this.handleError);
+  }
+
   public getAllLeaveRequestsInWaiting(): Observable<LeaveRequest[]> {
     return this.http.get(API_URL + '/api/leaverequest/waiting')
       .map(response => {

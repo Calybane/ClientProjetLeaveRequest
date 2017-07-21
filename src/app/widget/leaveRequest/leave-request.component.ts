@@ -15,11 +15,9 @@ import { SharedDataService } from '../../service/shared-data.service';
 
 export class LeaveRequestComponent implements OnInit {
 
-  en: any;
-
   minDate: Date;
   maxDate: Date;
-  dateTemp: Date;
+  validForm: boolean;
   showWellSpecial: boolean;
   daysTotal: number;
   types: SelectItem[];
@@ -45,22 +43,23 @@ export class LeaveRequestComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.en = { firstDayOfWeek: 0 };
     this.types = [];
-    this.sharedService.typeAbsence.forEach((key: string, value: string) => {
-      this.types.push({label: key, value: value});
+    this.leaveRequestDataService.getAllTypesAbsence().subscribe(response => {
+      response.forEach(type => {
+        this.types.push({label: type, value: type});
+      });
+      this.leaveRequest.typeAbsence = this.types[0].value;
+      this.onChangeTypes();
     });
-    this.leaveRequest.typeAbsence = this.types[0].value;
-    this.onChangeTypes();
 
     this.minDate = new Date(this.leaveRequest.leaveFrom);
-    this.dateTemp = new Date(this.leaveRequest.leaveFrom);
 
     this.personService.getPersonById(1).subscribe(person => {
       this.person = person;
       this.daysTotal = this.person.getDaysLeft();
       this.changeMaxDate();
       this.leaveRequest.personId = this.person.getId();
+      this.validForm = this.daysTotal > 0 && this.leaveRequest.daysTaken <= this.daysTotal && this.leaveRequest.leaveFrom <= this.leaveRequest.leaveTo;
     });
   }
 
@@ -93,10 +92,9 @@ export class LeaveRequestComponent implements OnInit {
   }
 
   leaveRequestValid(): boolean {
-    return this.leaveRequest.leaveFrom.getDate() <= this.leaveRequest.leaveTo.getDate()
+    return this.leaveRequest.leaveFrom <= this.leaveRequest.leaveTo
       && this.leaveRequest.daysTaken > 0
-      && this.leaveRequest.daysTaken <= this.daysTotal
-      && this.sharedService.typeAbsence.get(this.leaveRequest.typeAbsence) != null;
+      && this.leaveRequest.daysTaken <= this.daysTotal;
   }
 
   changeDaysTaken(): void {
@@ -113,6 +111,7 @@ export class LeaveRequestComponent implements OnInit {
       currentDate.setDate(currentDate.getDate() + 1);
     }
     this.leaveRequest.daysTaken = nb;
+    this.validForm = this.daysTotal > 0 && this.leaveRequest.daysTaken <= this.daysTotal && this.leaveRequest.leaveFrom <= this.leaveRequest.leaveTo;
   }
 
   changeMaxDate(): void {
