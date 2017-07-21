@@ -19,6 +19,7 @@ export class LeaveRequestComponent implements OnInit {
 
   minDate: Date;
   maxDate: Date;
+  dateTemp: Date;
   showWellSpecial: boolean;
   daysTotal: number;
   types: SelectItem[];
@@ -33,13 +34,11 @@ export class LeaveRequestComponent implements OnInit {
     this.disabledDates = new Array<Date>();
     this.leaveRequestService.getAllLeaveRequestsByPersonId(1).subscribe(requests => {
       requests.forEach(request => {
-        let i = 0;
         const currentDate: Date = new Date(request.leaveFrom);
         const stopDate: Date = new Date(request.leaveTo);
-        while (currentDate <= stopDate && i < 100) {
+        for (let i = 0; currentDate <= stopDate && i < 100; ++i) {
           this.disabledDates.push(new Date(currentDate));
           currentDate.setDate(currentDate.getDate() + 1);
-          ++i;
         }
       });
     });
@@ -54,12 +53,13 @@ export class LeaveRequestComponent implements OnInit {
     this.leaveRequest.typeAbsence = this.types[0].value;
     this.onChangeTypes();
 
-    this.minDate = new Date();
-    this.minDate.setDate(this.leaveRequest.leaveFrom.getDate());
+    this.minDate = new Date(this.leaveRequest.leaveFrom);
+    this.dateTemp = new Date(this.leaveRequest.leaveFrom);
 
     this.personService.getPersonById(1).subscribe(person => {
       this.person = person;
       this.daysTotal = this.person.getDaysLeft();
+      this.changeMaxDate();
       this.leaveRequest.personId = this.person.getId();
     });
   }
@@ -99,30 +99,32 @@ export class LeaveRequestComponent implements OnInit {
       && this.sharedService.typeAbsence.get(this.leaveRequest.typeAbsence) != null;
   }
 
-  selectedDate(): void {
-    let i = 0;
+  changeDaysTaken(): void {
     let nb = 0;
-    const currentDate: Date = new Date(this.leaveRequest.leaveFrom);
-    const endDate: Date = new Date(this.leaveRequest.leaveTo);
-    while (currentDate <= endDate && i < 100) {
+    const currentDate: Date = new Date();
+    currentDate.setDate(this.leaveRequest.leaveFrom.getDate());
+    const endDate: Date = new Date();
+    endDate.setDate(this.leaveRequest.leaveTo.getDate());
+    for (let i = 0; currentDate <= endDate && i < 100; ++i) {
       // depend of first day of week. here, first day is Sunday == 0 and Saturday == 6
       if (currentDate.getDay() > 0 && currentDate.getDay() < 6) {
         ++nb;
       }
       currentDate.setDate(currentDate.getDate() + 1);
-      ++i;
     }
     this.leaveRequest.daysTaken = nb;
   }
 
-  /*
   changeMaxDate(): void {
     this.maxDate = new Date();
-    let i = 0;
-    while (i < this.daysTotal) {
-      ++i;
-      this.maxDate.setDate(this.maxDate.getDate() + i)
+    this.maxDate.setDate(this.leaveRequest.leaveFrom.getDate());
+    for (let i = 1; i < this.daysTotal; ++i) {
+      this.maxDate.setDate(this.maxDate.getDate() + 1);
+      // depend of first day of week. here, first day is Sunday == 0 and Saturday == 6
+      if (this.maxDate.getDay() === 0 || this.maxDate.getDay() === 6) {
+        --i;
+      }
     }
   }
-  */
+
 }

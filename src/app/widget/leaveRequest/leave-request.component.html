@@ -20,17 +20,17 @@
         <div class="col-sm-6 nopadding">
           <label>From :</label>
           <br>
-          <p-calendar dateFormat="dd/mm/yy" name="startDate" [disabledDays]="[0,6]" (onClose)="selectedDate()" [disabledDates]="disabledDates" [(ngModel)]="leaveRequest.leaveFrom" [minDate]="minDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="2017:2030" required></p-calendar>
+          <p-calendar dateFormat="dd/mm/yy" name="startDate" [disabledDays]="[0,6]" (onClose)="changeDaysTaken(); changeMaxDate();" [disabledDates]="disabledDates" [(ngModel)]="leaveRequest.leaveFrom" [minDate]="minDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="2017:2030" required></p-calendar>
         </div>
 
         <div class="col-sm-6 nopadding">
           <label>To (incl.) :</label>
           <br>
-          <p-calendar dateFormat="dd/mm/yy" name="endDate" [disabledDays]="[0,6]" (onClose)="selectedDate()" [disabledDates]="disabledDates" [(ngModel)]="leaveRequest.leaveTo" [minDate]="leaveRequest.leaveFrom" [monthNavigator]="true" [yearNavigator]="true" yearRange="2017:2030" required></p-calendar>
+          <p-calendar dateFormat="dd/mm/yy" name="endDate" [disabledDays]="[0,6]" (onClose)="changeDaysTaken();" [disabledDates]="disabledDates" [(ngModel)]="leaveRequest.leaveTo" [minDate]="leaveRequest.leaveFrom" [maxDate]="maxDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="2017:2030" required></p-calendar>
         </div>
       </div>
 
-      <div *ngIf="leaveRequest.leaveFrom > leaveRequest.leaveTo">
+      <div *ngIf="leaveRequest.leaveTo < leaveRequest.leaveFrom">
         <br>
         <div class="alert alert-danger">
           <strong>Attention!</strong> The start date can't be after the end date.
