@@ -37,22 +37,16 @@ export class LeaveRequestDataService {
   }
 
 
-  public getAllLeaveRequestsInWaiting(): Observable<LeaveRequest[]> {
-    return this.http.get(API_URL + '/api/leaverequest/waiting')
-      .map(response => {
-        const requests = response.json().content;
-        return requests.map(request => new LeaveRequest(request));
-      })
+  public getAllLeaveRequestsInWaiting(paging: string): Observable<any> {
+    return this.http.get(API_URL + '/api/leaverequest/waiting' + paging)
+      .map(response => response.json())
       .catch(this.handleError);
   }
 
 
-  public getAllLeaveRequestsByPersonId(personId: number, paging: string): Observable<LeaveRequest[]> {
+  public getAllLeaveRequestsByPersonId(personId: number, paging: string): Observable<any> {
     return this.http.get(API_URL + '/api/leaverequest/person/' + personId + paging)
-      .map(response => {
-        const requests = response.json().content;
-        return requests.map(request => new LeaveRequest(request));
-      })
+      .map(response => response.json())
       .catch(this.handleError);
   }
 

@@ -30,7 +30,7 @@ export class LeaveRequestComponent implements OnInit {
 
   constructor(private leaveRequestDataService: LeaveRequestDataService, private personService: PersonDataService, private leaveRequestService: LeaveRequestDataService, private sharedService: SharedDataService) {
     this.disabledDates = new Array<Date>();
-    this.leaveRequestService.getAllLeaveRequestsByPersonId(1).subscribe(requests => {
+    this.leaveRequestService.getAllLeaveRequestsByPersonId(1, '').subscribe(requests => {
       requests.forEach(request => {
         const currentDate: Date = new Date(request.leaveFrom);
         const stopDate: Date = new Date(request.leaveTo);
