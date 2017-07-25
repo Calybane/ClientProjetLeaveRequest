@@ -28,9 +28,10 @@ body{
 }
 @media (max-width: 767px) {
   tbody {
-    font-size: 0.8em;
+    font-size: 0.9em;
   }
 }
+
 body .override-primeng-datatable .ui-datatable .ui-datatable-data > tr > td,
 body .override-primeng-datatable .ui-datatable .ui-datatable-thead > tr > th {
   padding-left: 5px;
@@ -38,7 +39,7 @@ body .override-primeng-datatable .ui-datatable .ui-datatable-thead > tr > th {
   text-align: center;
 }
 body .override-primeng-datatable .ui-datatable thead th.ui-state-active {
-  background-color: #696969;
+  background-color: gray;
   border-color: transparent;
   color: #ffffff;
 }
@@ -56,14 +57,21 @@ div .div-request-info {
   font-size:16px;
   padding: 5px 20px;
 }
-a.navbar-brand{
-  padding: 0 0 0 10px;
+a.navbar-brand.text{
+  padding-top: 14px;
 }
 .navbar-brand>img.img-responsive{
-  padding-top: 3px;
-  padding-bottom: 3px;
+  padding-top: 0px;
+  padding-bottom: 4px;
+  padding: 0 0 0 10px;
 }
 .navbar-inverse .navbar-brand, .navbar-inverse ul.nav.navbar-nav>li>a {
   color: #f9f9f9 !important;
   font-size: 1.1em;
+}
+.btn-danger{
+  background-color: #de0903;
+}
+.btn-success{
+  background-color: #009900;
 }
