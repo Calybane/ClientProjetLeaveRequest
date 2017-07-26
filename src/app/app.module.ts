@@ -12,13 +12,18 @@ import { AppComponent} from './app.component';
 import { HeaderComponent} from './widget/header/header.component';
 import { LeaveRequestComponent } from './widget/leaveRequest/leave-request.component';
 import { HomeComponent } from './widget/home/home.component';
-import { SharedDataService } from './service/shared-data.service';
+import { AuthGuard } from './app.authGuard';
 
 import { RouterModule } from '@angular/router';
 import { ROUTES} from './app.route';
-import { HttpModule } from '@angular/http';
+import { ConnectionBackend, Http, HttpModule, XHRBackend } from '@angular/http';
 import { ListRequestsComponent } from './widget/listRequests/list-requests.component';
 import { RequestsApprobationComponent } from './widget/requestsApprobation/requests-approbation.component';
+import { SigninComponent } from './widget/signin/signin.component';
+import { AuthenticationService } from './service/authentication.service';
+import { CustomHttp } from './service/custom-http.service';
+import {PersonDataService} from './service/person-data.service';
+import {SharedService} from './service/shared.service';
 
 @NgModule({
   declarations: [
@@ -27,7 +32,8 @@ import { RequestsApprobationComponent } from './widget/requestsApprobation/reque
     LeaveRequestComponent,
     HomeComponent,
     ListRequestsComponent,
-    RequestsApprobationComponent
+    RequestsApprobationComponent,
+    SigninComponent
   ],
   imports: [
     BrowserModule,
@@ -42,7 +48,14 @@ import { RequestsApprobationComponent } from './widget/requestsApprobation/reque
     DialogModule,
     RouterModule.forRoot(ROUTES)
   ],
-  providers: [SharedDataService],
+  providers: [
+    {provide: Http, useClass: CustomHttp},
+    {provide: ConnectionBackend, useClass: XHRBackend},
+    AuthGuard,
+    AuthenticationService,
+    PersonDataService,
+    SharedService
+  ],
   bootstrap: [AppComponent]
 })
 

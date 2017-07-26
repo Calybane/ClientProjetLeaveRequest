@@ -75,3 +75,6 @@ a.navbar-brand.text{
 .btn-success{
   background-color: #009900;
 }
+div.ui-paginator-bottom.ui-paginator.ui-widget.ui-widget-header.ui-unselectable-text{
+  padding: 10px 0;
+}

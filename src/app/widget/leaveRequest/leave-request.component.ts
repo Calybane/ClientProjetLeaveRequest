@@ -4,7 +4,6 @@ import { Person } from '../../model/person';
 import { SelectItem } from 'primeng/primeng';
 import { LeaveRequestDataService } from '../../service/leave-request-data.service';
 import { PersonDataService } from '../../service/person-data.service';
-import { SharedDataService } from '../../service/shared-data.service';
 
 @Component({
   selector: 'app-leave-request',
@@ -22,24 +21,13 @@ export class LeaveRequestComponent implements OnInit {
   daysTotal: number;
   types: SelectItem[];
 
-  disabledDates: Date[];
+  disabledDates: Date[] = new Array<Date>();
 
   person: Person;
 
   leaveRequest: LeaveRequest = new LeaveRequest();
 
-  constructor(private leaveRequestDataService: LeaveRequestDataService, private personService: PersonDataService, private leaveRequestService: LeaveRequestDataService, private sharedService: SharedDataService) {
-    this.disabledDates = new Array<Date>();
-    this.leaveRequestService.getAllLeaveRequestsByPersonId(1, '').subscribe(requests => {
-      requests.forEach(request => {
-        const currentDate: Date = new Date(request.leaveFrom);
-        const stopDate: Date = new Date(request.leaveTo);
-        for (let i = 0; currentDate <= stopDate && i < 100; ++i) {
-          this.disabledDates.push(new Date(currentDate));
-          currentDate.setDate(currentDate.getDate() + 1);
-        }
-      });
-    });
+  constructor(private leaveRequestDataService: LeaveRequestDataService, private personService: PersonDataService, private leaveRequestService: LeaveRequestDataService) {
   }
 
   ngOnInit() {
@@ -60,6 +48,19 @@ export class LeaveRequestComponent implements OnInit {
       this.changeMaxDate();
       this.leaveRequest.personId = this.person.getId();
       this.validForm = this.daysTotal > 0 && this.leaveRequest.daysTaken <= this.daysTotal && this.leaveRequest.leaveFrom <= this.leaveRequest.leaveTo;
+    });
+  }
+
+  getAllLeaveRequestsSubmited() {
+    this.leaveRequestService.getAllLeaveRequestsByPersonId(1, '').subscribe(list => {
+      list.forEach(request => {
+        const currentDate: Date = new Date(request.leaveFrom);
+        const stopDate: Date = new Date(request.leaveTo);
+        for (let i = 0; currentDate <= stopDate && i < 100; ++i) {
+          this.disabledDates.push(new Date(currentDate));
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+      });
     });
   }
 

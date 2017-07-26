@@ -14,7 +14,7 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav" *ngIf="!isPageSignIn()">
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             Leave of absence <span class="caret"></span>
@@ -28,7 +28,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <!--<li class="hidden-xs"><a routerLink="/"><span class="glyphicon glyphicon-user"></span> Hello {{person.firstname}} {{person.lastname}} !</a></li>-->
-        <li><a routerLink="/"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+        <li><a class="link" routerLink="" (click)="logout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
