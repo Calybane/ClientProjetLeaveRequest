@@ -31,7 +31,6 @@ body{
     font-size: 0.9em;
   }
 }
-
 body .override-primeng-datatable .ui-datatable .ui-datatable-data > tr > td,
 body .override-primeng-datatable .ui-datatable .ui-datatable-thead > tr > th {
   padding-left: 5px;
@@ -57,18 +56,6 @@ div .div-request-info {
   font-size:16px;
   padding: 5px 20px;
 }
-a.navbar-brand.text{
-  padding-top: 14px;
-}
-.navbar-brand>img.img-responsive{
-  padding-top: 0px;
-  padding-bottom: 4px;
-  padding: 0 0 0 10px;
-}
-.navbar-inverse .navbar-brand, .navbar-inverse ul.nav.navbar-nav>li>a {
-  color: #f9f9f9 !important;
-  font-size: 1.1em;
-}
 .btn-danger{
   background-color: #de0903;
 }
@@ -78,3 +65,11 @@ a.navbar-brand.text{
 div.ui-paginator-bottom.ui-paginator.ui-widget.ui-widget-header.ui-unselectable-text{
   padding: 10px 0;
 }
+/*
+tr.ui-widget-content.Approved{
+  background-color: #c6ebc6 !important;
+}
+tr.ui-widget-content.Rejected{
+  background-color: #ffcccc !important;
+}
+*/

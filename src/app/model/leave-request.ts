@@ -32,4 +32,12 @@ export class LeaveRequest {
       this.leaveFrom.setDate(this.leaveFrom.getDate() + 1);
     }
   }
+
+  getApproval(): string {
+    if (this.status === 'Rejected') {
+      return 'Date of reject : ';
+    } else {
+      return 'Date of approval : ';
+    }
+  }
 }

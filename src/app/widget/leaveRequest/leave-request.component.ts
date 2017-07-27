@@ -45,7 +45,7 @@ export class LeaveRequestComponent implements OnInit {
     this.personService.getPersonById(1).subscribe(person => {
       this.person = person;
       this.daysTotal = this.person.getDaysLeft();
-      this.changeMaxDate();
+      // this.changeMaxDate();
       this.leaveRequest.personId = this.person.getId();
       this.validForm = this.daysTotal > 0 && this.leaveRequest.daysTaken <= this.daysTotal && this.leaveRequest.leaveFrom <= this.leaveRequest.leaveTo;
     });
@@ -101,9 +101,10 @@ export class LeaveRequestComponent implements OnInit {
   changeDaysTaken(): void {
     // Date management in angular/javascript is very tricky and scary, possible failure, but work this 21/07/2017
     let nb = 0;
-    const currentDate: Date = new Date();
-    currentDate.setDate(this.leaveRequest.leaveFrom.getDate());
+    const currentDate: Date = new Date(this.leaveRequest.leaveFrom);
     const endDate: Date = new Date(this.leaveRequest.leaveTo);
+    console.log('current : ' + currentDate);
+    console.log('end : ' + endDate);
     for (let i = 0; currentDate <= endDate && i < 100; ++i) {
       // depend of first day of week. here, first day is Sunday == 0 and Saturday == 6
       if (currentDate.getDay() > 0 && currentDate.getDay() < 6) {
