@@ -3,22 +3,16 @@ export class LeaveRequest {
   id: number;
   personId: number;
   typeAbsence: string;
-  leaveFrom: Date;
-  leaveTo: Date;
-  daysTaken: number;
-  requestDate: Date;
-  approvalDate: Date;
-  status: string;
+  leaveFrom: Date = new Date();
+  leaveTo: Date = new Date();
+  daysTaken: number = 1;
+  requestDate: Date = new Date();
+  approvalDate: Date = null;
+  status: string = '';
 
   constructor(values: Object = {}) {
-    this.leaveFrom = new Date();
     this.setDates();
-    this.leaveTo = new Date();
     this.leaveTo.setDate(this.leaveFrom.getDate());
-    this.daysTaken = 1;
-    this.requestDate = new Date();
-    this.approvalDate = null;
-    this.status = 'Waiting for approval'
 
     Object.assign(this, values);
   }

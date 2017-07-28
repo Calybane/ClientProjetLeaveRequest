@@ -1,14 +1,10 @@
 export class Person {
   id: number;
-  lastname: string;
-  firstname: string;
-  daysLeft: number;
-  role: string;
+  lastname: string = '';
+  firstname: string = '';
+  daysLeft: number = 0;
 
   constructor(values: Object = {}) {
-    this.lastname = '';
-    this.firstname = '';
-
     Object.assign(this, values);
   }
 
@@ -26,10 +22,6 @@ export class Person {
 
   getDaysLeft(): number {
     return this.daysLeft;
-  }
-
-  getRole(): string {
-    return this.role;
   }
 
 }

@@ -114,7 +114,7 @@ export class LeaveRequestComponent implements OnInit {
     }
 
     // 'nb + 1' is a fixe to take into account the management of the dates
-    this.leaveRequest.daysTaken = nb + 1;
+    this.leaveRequest.daysTaken = nb;
     this.validForm = this.daysTotal > 0 && this.leaveRequest.daysTaken <= this.daysTotal && this.leaveRequest.leaveFrom <= this.leaveRequest.leaveTo;
   }
 

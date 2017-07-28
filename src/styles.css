@@ -48,13 +48,16 @@ body .override-primeng-datatable .ui-datatable .ui-datatable-data tr.ui-state-hi
   background-color: #9e9e9e;
   border-color: #6d6d6d;
 }
-.btn {
- margin: 5px;
+.pull-left {
+ margin: 5px 5px 5px 0;
+}
+.pull-right {
+  margin: 5px 0 5px 5px;
 }
 div .div-request-info {
   text-align: left;
   font-size:16px;
-  padding: 5px 20px;
+  padding: 5px 5px 5px 15px;
 }
 .btn-danger{
   background-color: #de0903;
@@ -73,3 +76,6 @@ tr.ui-widget-content.Rejected{
   background-color: #ffcccc !important;
 }
 */
+.title{
+  padding-left: 10px;
+}

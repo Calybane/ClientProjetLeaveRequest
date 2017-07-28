@@ -11,19 +11,10 @@ import {SharedService} from '../../service/shared.service';
 })
 export class HeaderComponent implements OnInit {
 
-  person: Person = new Person();
-
-  constructor(private personService: PersonDataService,
-              private authService: AuthenticationService,
+  constructor(private authService: AuthenticationService,
               private sharedService: SharedService) { }
 
   ngOnInit() {
-    // TODO : remove when we can get the role of a user
-    if (localStorage.getItem('token')) {
-      this.personService.getPersonById(1).subscribe((person) => {
-        this.person = person;
-      });
-    }
   }
 
   logout() {
@@ -32,6 +23,10 @@ export class HeaderComponent implements OnInit {
 
   isPageSignIn(): boolean {
     return this.sharedService.pageSignin;
+  }
+
+  hasRole(role: string): boolean {
+    return this.sharedService.hasRole(role);
   }
 
 }

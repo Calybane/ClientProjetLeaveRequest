@@ -78,8 +78,15 @@ export class LeaveRequestDataService {
   }
 
 
-  public approvedLeaveRequest(request: LeaveRequest): Observable<LeaveRequest> {
-    return this.http.put(API_URL + '/api/leaverequest/' + request.id + '/changestatus/approved', request)
+  public approvedLeaveRequestByManager(request: LeaveRequest): Observable<LeaveRequest> {
+    return this.http.put(API_URL + '/api/leaverequest/' + request.id + '/changestatus/approved/manager', request)
+      .map(response => new LeaveRequest(response.json()))
+      .catch(this.handleError);
+  }
+
+
+  public approvedLeaveRequestByHR(request: LeaveRequest): Observable<LeaveRequest> {
+    return this.http.put(API_URL + '/api/leaverequest/' + request.id + '/changestatus/approved/hr', request)
       .map(response => new LeaveRequest(response.json()))
       .catch(this.handleError);
   }
@@ -91,6 +98,13 @@ export class LeaveRequestDataService {
       .catch(this.handleError);
   }
 
+  /*
+  public generatePDF(request: LeaveRequest): Observable<any> {
+    return this.http.get(API_URL + '/api/leaverequest/' + request.id + '/pdf', request)
+      .map(response => request)
+      .catch(this.handleError);
+  }
+  */
 
   private handleError (error: Response | any) {
     console.error('ApiLeaveRequestService::handleError', error);
