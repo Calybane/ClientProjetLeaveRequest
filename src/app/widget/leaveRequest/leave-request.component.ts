@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { LeaveRequest } from '../../model/leave-request';
-import { Person } from '../../model/person';
-import { SelectItem } from 'primeng/primeng';
-import { LeaveRequestDataService } from '../../service/leave-request-data.service';
-import { PersonDataService } from '../../service/person-data.service';
+import {Component, OnInit} from '@angular/core';
+import {LeaveRequest} from '../../model/leave-request';
+import {Person} from '../../model/person';
+import {SelectItem} from 'primeng/primeng';
+import {LeaveRequestDataService} from '../../service/leave-request-data.service';
+import {PersonDataService} from '../../service/person-data.service';
 
 @Component({
   selector: 'app-leave-request',

@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-import { environment } from 'environments/environment';
+import {Injectable} from '@angular/core';
+import {Http} from '@angular/http';
+import {environment} from 'environments/environment';
 
-import { LeaveRequest } from '../model/leave-request';
-import { Observable } from 'rxjs/Observable';
+import {LeaveRequest} from '../model/leave-request';
+import {Observable} from 'rxjs/Observable';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -37,8 +37,8 @@ export class LeaveRequestDataService {
   }
 
 
-  public getAllLeaveRequestsInWaiting(paging: string): Observable<any> {
-    return this.http.get(API_URL + '/api/leaverequest/waiting' + paging)
+  public getAllLeaveRequestsByStatus(status: string, paging: string): Observable<any> {
+    return this.http.get(API_URL + '/api/leaverequest/' + status + paging)
       .map(response => response.json())
       .catch(this.handleError);
   }

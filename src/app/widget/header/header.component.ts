@@ -1,6 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
-import {Person} from '../../model/person';
-import {PersonDataService} from '../../service/person-data.service';
+import {Component, OnInit} from '@angular/core';
 import {AuthenticationService} from '../../service/authentication.service';
 import {SharedService} from '../../service/shared.service';
 
@@ -27,6 +25,10 @@ export class HeaderComponent implements OnInit {
 
   hasRole(role: string): boolean {
     return this.sharedService.hasRole(role);
+  }
+
+  isSimpleUser(): boolean {
+    return this.sharedService.isSimpleUser();
   }
 
 }

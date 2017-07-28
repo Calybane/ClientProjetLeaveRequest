@@ -7,7 +7,8 @@ export class LeaveRequest {
   leaveTo: Date = new Date();
   daysTaken: number = 1;
   requestDate: Date = new Date();
-  approvalDate: Date = null;
+  approvalManagerDate: Date = null;
+  approvalHRDate: Date = null;
   status: string = '';
 
   constructor(values: Object = {}) {
@@ -27,11 +28,23 @@ export class LeaveRequest {
     }
   }
 
-  getApproval(): string {
-    if (this.status === 'Rejected') {
-      return 'Date of reject : ';
+  getApprovalManager(): string {
+    if (this.status === 'Rejected' && this.approvalHRDate == null) {
+      return 'Date of reject by manager: ';
     } else {
-      return 'Date of approval : ';
+      return 'Date of approval by manager : ';
     }
+  }
+
+  getApprovalHR(): string {
+    if (this.status === 'Rejected' && this.approvalHRDate != null) {
+      return 'Date of reject by HR : ';
+    } else {
+      return 'Date of approval by HR : ';
+    }
+  }
+
+  showApprovalHRDate(): boolean {
+    return (this.status !== 'Rejected' && this.approvalManagerDate != null) || (this.status === 'Rejected' && this.approvalHRDate != null);
   }
 }
