@@ -4,6 +4,7 @@ import {ListRequestsComponent} from './widget/listRequests/list-requests.compone
 import {RequestsApprobationComponent} from './widget/requestsApprobation/requests-approbation.component';
 import {HomeComponent} from './widget/home/home.component';
 import {SigninComponent} from './widget/signin/signin.component';
+import {ScheduleComponent} from './widget/schedule/schedule.component';
 import {AuthGuard} from './app.authGuard';
 
 export const ROUTES: Routes = [
@@ -31,6 +32,11 @@ export const ROUTES: Routes = [
   {
     path: 'home',
     component: HomeComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'schedule',
+    component: ScheduleComponent,
     canActivate: [AuthGuard]
   },
   {

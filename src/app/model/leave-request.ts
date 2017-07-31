@@ -13,7 +13,8 @@ export class LeaveRequest {
 
   constructor(values: Object = {}) {
     this.setDates();
-    this.leaveTo.setDate(this.leaveFrom.getDate());
+    this.leaveFrom.setHours(0, 0, 0, 0);
+    this.leaveTo.setHours(0, 0, 0, 0);
 
     Object.assign(this, values);
   }
@@ -21,10 +22,13 @@ export class LeaveRequest {
   setDates(): void {
     if (this.leaveFrom.getDay() === 5) {
       this.leaveFrom.setDate(this.leaveFrom.getDate() + 3);
+      this.leaveTo.setDate(this.leaveTo.getDate() + 3);
     } else if (this.leaveFrom.getDay() === 6) {
       this.leaveFrom.setDate(this.leaveFrom.getDate() + 2);
+      this.leaveTo.setDate(this.leaveTo.getDate() + 2);
     } else {
       this.leaveFrom.setDate(this.leaveFrom.getDate() + 1);
+      this.leaveTo.setDate(this.leaveTo.getDate() + 1);
     }
   }
 

@@ -3,7 +3,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
-import {CalendarModule, DataTableModule, DialogModule, PanelMenuModule, SelectButtonModule} from 'primeng/primeng';
+import {CalendarModule, DataTableModule, DialogModule, PanelMenuModule, SelectButtonModule, ScheduleModule} from 'primeng/primeng';
 
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './widget/header/header.component';
@@ -23,6 +23,7 @@ import {PersonDataService} from './service/person-data.service';
 import {SharedService} from './service/shared.service';
 import {RolesService} from './service/roles.service';
 import {LeaveRequestDataService} from './service/leave-request-data.service';
+import {ScheduleComponent} from './widget/schedule/schedule.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import {LeaveRequestDataService} from './service/leave-request-data.service';
     HomeComponent,
     ListRequestsComponent,
     RequestsApprobationComponent,
-    SigninComponent
+    SigninComponent,
+    ScheduleComponent
   ],
   imports: [
     BrowserModule,
@@ -42,6 +44,7 @@ import {LeaveRequestDataService} from './service/leave-request-data.service';
     ReactiveFormsModule,
     PanelMenuModule,
     CalendarModule,
+    ScheduleModule,
     SelectButtonModule,
     DataTableModule,
     DialogModule,

@@ -4,6 +4,7 @@ import {Person} from '../../model/person';
 import {SelectItem} from 'primeng/primeng';
 import {LeaveRequestDataService} from '../../service/leave-request-data.service';
 import {PersonDataService} from '../../service/person-data.service';
+import {createUrlResolverWithoutPackagePrefix} from '@angular/compiler';
 
 @Component({
   selector: 'app-leave-request',
@@ -99,12 +100,9 @@ export class LeaveRequestComponent implements OnInit {
   }
 
   changeDaysTaken(): void {
-    // Date management in angular/javascript is very tricky and scary, possible failure, but work this 21/07/2017
     let nb = 0;
     const currentDate: Date = new Date(this.leaveRequest.leaveFrom);
     const endDate: Date = new Date(this.leaveRequest.leaveTo);
-    console.log('current : ' + currentDate);
-    console.log('end : ' + endDate);
     for (let i = 0; currentDate <= endDate && i < 100; ++i) {
       // depend of first day of week. here, first day is Sunday == 0 and Saturday == 6
       if (currentDate.getDay() > 0 && currentDate.getDay() < 6) {
@@ -113,7 +111,6 @@ export class LeaveRequestComponent implements OnInit {
       currentDate.setDate(currentDate.getDate() + 1);
     }
 
-    // 'nb + 1' is a fixe to take into account the management of the dates
     this.leaveRequest.daysTaken = nb;
     this.validForm = this.daysTotal > 0 && this.leaveRequest.daysTaken <= this.daysTotal && this.leaveRequest.leaveFrom <= this.leaveRequest.leaveTo;
   }
