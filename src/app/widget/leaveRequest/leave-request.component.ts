@@ -26,12 +26,15 @@ export class LeaveRequestComponent implements OnInit {
 
   person: Person;
 
-  leaveRequest: LeaveRequest = new LeaveRequest();
+  leaveRequest: LeaveRequest;
 
   constructor(private leaveRequestDataService: LeaveRequestDataService, private personService: PersonDataService, private leaveRequestService: LeaveRequestDataService) {
   }
 
   ngOnInit() {
+    this.setLeaveRequest();
+    this.minDate = moment(this.leaveRequest.leaveFrom).toDate();
+
     this.types = [];
     this.leaveRequestDataService.getAllTypesAbsence().subscribe(response => {
       response.forEach(type => {
@@ -41,27 +44,12 @@ export class LeaveRequestComponent implements OnInit {
       this.onChangeTypes();
     });
 
-    this.minDate = new Date(this.leaveRequest.leaveFrom);
-
     this.personService.getPersonById(1).subscribe(person => {
       this.person = person;
-      this.daysTotal = this.person.getDaysLeft();
-      // this.changeMaxDate();
-      this.leaveRequest.personId = this.person.getId();
+      this.daysTotal = this.person.daysLeft;
+      this.changeMaxDate();
+      this.leaveRequest.personId = this.person.id;
       this.validForm = this.daysTotal > 0 && this.leaveRequest.daysTaken <= this.daysTotal && this.leaveRequest.leaveFrom <= this.leaveRequest.leaveTo;
-    });
-  }
-
-  getAllLeaveRequestsSubmited() {
-    this.leaveRequestService.getAllLeaveRequestsByPersonId(1, '').subscribe(list => {
-      list.forEach(request => {
-        const currentDate: Date = new Date(request.leaveFrom);
-        const stopDate: Date = new Date(request.leaveTo);
-        for (let i = 0; currentDate <= stopDate && i < 100; ++i) {
-          this.disabledDates.push(new Date(currentDate));
-          currentDate.setDate(currentDate.getDate() + 1);
-        }
-      });
     });
   }
 
@@ -77,11 +65,30 @@ export class LeaveRequestComponent implements OnInit {
     }
   }
 
+  setLeaveRequest(): void {
+    this.leaveRequest = null;
+    this.leaveRequest = {
+      id: null,
+      personId: 0,
+      typeAbsence: '',
+      leaveFrom: moment().toDate(),
+      leaveTo: moment().toDate(),
+      daysTaken: 1,
+      requestDate: moment().toDate(),
+      approvalManagerDate: null,
+      approvalHRDate: null,
+      status: '',
+      description: '',
+    };
+
+    this.setDates();
+  }
+
   createLeaveRequest() {
     this.leaveRequestDataService.createLeaveRequest(this.leaveRequest).subscribe(reponse => {
-      this.leaveRequest = new LeaveRequest();
-      this.leaveRequest.personId = this.person.getId();
+      this.setLeaveRequest();
       this.leaveRequest.typeAbsence = this.types[0].value;
+      this.leaveRequest.personId = this.person.id;
     });
   }
 
@@ -115,10 +122,24 @@ export class LeaveRequestComponent implements OnInit {
     this.validForm = this.daysTotal > 0 && this.leaveRequest.daysTaken <= this.daysTotal && this.leaveRequest.leaveFrom <= this.leaveRequest.leaveTo;
   }
 
+  setDates(): void {
+    // set date to next open day
+    if (this.leaveRequest.leaveFrom.getDay() === 5) {
+      this.leaveRequest.leaveFrom.setDate(this.leaveRequest.leaveFrom.getDate() + 3);
+      this.leaveRequest.leaveTo.setDate(this.leaveRequest.leaveTo.getDate() + 3);
+    } else if (this.leaveRequest.leaveFrom.getDay() === 6) {
+      this.leaveRequest.leaveFrom.setDate(this.leaveRequest.leaveFrom.getDate() + 2);
+      this.leaveRequest.leaveTo.setDate(this.leaveRequest.leaveTo.getDate() + 2);
+    } else {
+      this.leaveRequest.leaveFrom.setDate(this.leaveRequest.leaveFrom.getDate() + 1);
+      this.leaveRequest.leaveTo.setDate(this.leaveRequest.leaveTo.getDate() + 1);
+    }
+  }
+
   changeMaxDate(): void {
     this.maxDate = moment(this.leaveRequest.leaveFrom).toDate();
     for (let i = 1; i < this.daysTotal; ++i) {
-      this.maxDate.setDate(this.maxDate.getDate() + 1);
+      this.maxDate = moment(this.maxDate).add(1, 'day').toDate();
       // depend of first day of week. here, first day is Sunday == 0 and Saturday == 6
       if (this.maxDate.getDay() === 0 || this.maxDate.getDay() === 6) {
         --i;

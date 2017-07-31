@@ -31,23 +31,6 @@ body{
     font-size: 0.9em;
   }
 }
-body .override-primeng-datatable .ui-datatable .ui-datatable-data > tr > td,
-body .override-primeng-datatable .ui-datatable .ui-datatable-thead > tr > th {
-  padding-left: 5px;
-  padding-right: 5px;
-  text-align: center;
-}
-body .override-primeng-datatable .ui-datatable thead th.ui-state-active {
-  background-color: gray;
-  border-color: transparent;
-  color: #ffffff;
-}
-body .override-primeng-datatable .ui-datatable .ui-datatable-data tr.ui-datatable-even.ui-state-highlight,
-body .override-primeng-datatable .ui-state-active, body .override-primeng-datatable .ui-state-highlight,
-body .override-primeng-datatable .ui-datatable .ui-datatable-data tr.ui-state-highlight {
-  background-color: #9e9e9e;
-  border-color: #6d6d6d;
-}
 .pull-left {
  margin: 5px 5px 5px 0;
 }
@@ -65,17 +48,50 @@ div .div-request-info {
 .btn-success{
   background-color: #009900;
 }
+.title{
+  padding-left: 10px;
+}
+
+
+/* DataTable */
+
 div.ui-paginator-bottom.ui-paginator.ui-widget.ui-widget-header.ui-unselectable-text{
   padding: 10px 0;
 }
-/*
-tr.ui-widget-content.Approved{
-  background-color: #c6ebc6 !important;
+tr.ui-widget-content.approvedbymanager{
+  background-color: #ffebcc !important;
 }
-tr.ui-widget-content.Rejected{
+tr.ui-widget-content.approvedbyhr{
+  background-color: #c6ecc6 !important;
+}
+tr.ui-widget-content.rejected{
   background-color: #ffcccc !important;
 }
-*/
-.title{
-  padding-left: 10px;
+body .override-primeng-datatable .ui-datatable .ui-datatable-data > tr > td,
+body .override-primeng-datatable .ui-datatable .ui-datatable-thead > tr > th {
+  padding-left: 5px;
+  padding-right: 5px;
+  text-align: center;
+}
+body .override-primeng-datatable .ui-datatable thead th.ui-state-active {
+  background-color: gray;
+  border-color: transparent;
+  color: #ffffff;
+}
+body .override-primeng-datatable .ui-datatable .ui-datatable-data tr.ui-datatable-even.ui-state-highlight,
+body .override-primeng-datatable .ui-state-active, body .override-primeng-datatable .ui-state-highlight,
+body .override-primeng-datatable .ui-datatable .ui-datatable-data tr.ui-state-highlight {
+  background-color: #9e9e9e;
+  border-color: #6d6d6d;
+}
+
+
+/* Schedule */
+
+.event-waiting {
+  color: orange;
+  background-color: orange;
+}
+.fc-toolbar h2 {
+  font-size: 1.7em;
 }

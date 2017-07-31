@@ -10,6 +10,8 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import {LeaveRequestView} from '../view/leave-request-view';
 
+import * as moment from 'moment';
+
 const API_URL = environment.apiUrl;
 
 @Injectable()
@@ -20,29 +22,48 @@ export class LeaveRequestDataService {
 
   public getAllTypesAbsence(): Observable<string[]> {
     return this.http.get(API_URL + '/api/leaverequest/typesabsence')
-      .map(response => {
-        const requests = response.json();
-        return requests.map(request => request);
-      })
+      .map(requests => requests.json().map(request => request))
       .catch(this.handleError);
   }
 
 
   public getAllLeaveRequests(): Observable<LeaveRequest[]> {
     return this.http.get(API_URL + '/api/leaverequest')
-      .map(response => {
-        const requests = response.json().content;
-        return requests.map(request => new LeaveRequest(request));
+      .map(requests => {
+        return requests.json().content.map(leave => {
+          const request = leave.json();
+          const leaverequest: LeaveRequest = {
+            id: request.id,
+            personId: request.personId,
+            typeAbsence: request.typeAbsence,
+            leaveFrom: request.leaveFrom,
+            leaveTo: request.leaveTo,
+            daysTaken: request.daysTaken,
+            requestDate: request.requestDate,
+            approvalManagerDate: request.approvalManagerDate,
+            approvalHRDate: request.approvalHRDate,
+            status: request.status,
+            description: request.description
+          }
+          return leaverequest;
+        });
       })
       .catch(this.handleError);
   }
 
 
-  public getAllLeaveRequestsView(): Observable<LeaveRequest[]> {
-    return this.http.get(API_URL + '/api/leaverequest')
-      .map(response => {
-        const requests = response.json().content;
-        return requests.map(request => new LeaveRequestView(request));
+  public getAllLeaveRequestsView(): Observable<LeaveRequestView[]> {
+    return this.http.get(API_URL + '/api/leaverequest/views')
+      .map(requests => {
+        return requests.json().map(request => {
+          const view: LeaveRequestView = {
+            id: request.id,
+            start: moment(request.leaveFrom).format('YYYY-MM-DD'),
+            end: moment(request.leaveTo).add(1, 'day').format('YYYY-MM-DD'),
+            title: request.description,
+          };
+          return view;
+        });
       })
       .catch(this.handleError);
   }
@@ -64,23 +85,72 @@ export class LeaveRequestDataService {
 
   public getLeaveRequestById(requestId: number): Observable<LeaveRequest> {
     return this.http.get(API_URL + '/api/leaverequest/' + requestId)
-      .map(response => new LeaveRequest(response.json()))
+      .map(response => {
+        const request = response.json();
+        const leaverequest: LeaveRequest = {
+          id: request.id,
+          personId: request.personId,
+          typeAbsence: request.typeAbsence,
+          leaveFrom: request.leaveFrom,
+          leaveTo: request.leaveTo,
+          daysTaken: request.daysTaken,
+          requestDate: request.requestDate,
+          approvalManagerDate: request.approvalManagerDate,
+          approvalHRDate: request.approvalHRDate,
+          status: request.status,
+          description: request.description
+        }
+        return leaverequest;
+      })
       .catch(this.handleError);
   }
 
 
-  public createLeaveRequest(request: LeaveRequest): Observable<LeaveRequest> {
-    return this.http.post(API_URL + '/api/leaverequest', request)
-      .map(response => new LeaveRequest(response.json()))
+  public createLeaveRequest(leave: LeaveRequest): Observable<LeaveRequest> {
+    return this.http.post(API_URL + '/api/leaverequest', leave)
+      .map(response => {
+        const request = response.json();
+        const leaverequest: LeaveRequest = {
+          id: request.id,
+          personId: request.personId,
+          typeAbsence: request.typeAbsence,
+          leaveFrom: request.leaveFrom,
+          leaveTo: request.leaveTo,
+          daysTaken: request.daysTaken,
+          requestDate: request.requestDate,
+          approvalManagerDate: request.approvalManagerDate,
+          approvalHRDate: request.approvalHRDate,
+          status: request.status,
+          description: request.description
+        }
+        return leaverequest;
+      })
       .catch(this.handleError);
   }
 
 
-  public updateLeaveRequest(request: LeaveRequest): Observable<LeaveRequest> {
-    return this.http.put(API_URL + '/api/leaverequest/' + request.id, request)
-      .map(response => new LeaveRequest(response.json()))
+  public updateLeaveRequest(leave: LeaveRequest): Observable<LeaveRequest> {
+    return this.http.put(API_URL + '/api/leaverequest/' + leave.id, leave)
+      .map(response => {
+        const request = response.json();
+        const leaverequest: LeaveRequest = {
+          id: request.id,
+          personId: request.personId,
+          typeAbsence: request.typeAbsence,
+          leaveFrom: request.leaveFrom,
+          leaveTo: request.leaveTo,
+          daysTaken: request.daysTaken,
+          requestDate: request.requestDate,
+          approvalManagerDate: request.approvalManagerDate,
+          approvalHRDate: request.approvalHRDate,
+          status: request.status,
+          description: request.description
+        }
+        return leaverequest;
+      })
       .catch(this.handleError);
   }
+
 
   public deleteLeaveRequestById(requestId: number): Observable<null> {
     return this.http.delete(API_URL + '/api/leaverequest/' + requestId)
@@ -89,23 +159,71 @@ export class LeaveRequestDataService {
   }
 
 
-  public approvedLeaveRequestByManager(request: LeaveRequest): Observable<LeaveRequest> {
-    return this.http.put(API_URL + '/api/leaverequest/' + request.id + '/changestatus/approved/manager', request)
-      .map(response => new LeaveRequest(response.json()))
+  public approvedLeaveRequestByManager(leave: LeaveRequest): Observable<LeaveRequest> {
+    return this.http.put(API_URL + '/api/leaverequest/' + leave.id + '/changestatus/approved/manager', leave)
+      .map(response => {
+        const request = response.json();
+        const leaverequest: LeaveRequest = {
+          id: request.id,
+          personId: request.personId,
+          typeAbsence: request.typeAbsence,
+          leaveFrom: request.leaveFrom,
+          leaveTo: request.leaveTo,
+          daysTaken: request.daysTaken,
+          requestDate: request.requestDate,
+          approvalManagerDate: request.approvalManagerDate,
+          approvalHRDate: request.approvalHRDate,
+          status: request.status,
+          description: request.description
+        }
+        return leaverequest;
+      })
       .catch(this.handleError);
   }
 
 
-  public approvedLeaveRequestByHR(request: LeaveRequest): Observable<LeaveRequest> {
-    return this.http.put(API_URL + '/api/leaverequest/' + request.id + '/changestatus/approved/hr', request)
-      .map(response => new LeaveRequest(response.json()))
+  public approvedLeaveRequestByHR(leave: LeaveRequest): Observable<LeaveRequest> {
+    return this.http.put(API_URL + '/api/leaverequest/' + leave.id + '/changestatus/approved/hr', leave)
+      .map(response => {
+        const request = response.json();
+        const leaverequest: LeaveRequest = {
+          id: request.id,
+          personId: request.personId,
+          typeAbsence: request.typeAbsence,
+          leaveFrom: request.leaveFrom,
+          leaveTo: request.leaveTo,
+          daysTaken: request.daysTaken,
+          requestDate: request.requestDate,
+          approvalManagerDate: request.approvalManagerDate,
+          approvalHRDate: request.approvalHRDate,
+          status: request.status,
+          description: request.description
+        }
+        return leaverequest;
+      })
       .catch(this.handleError);
   }
 
 
-  public rejectedLeaveRequest(request: LeaveRequest): Observable<LeaveRequest> {
-    return this.http.put(API_URL + '/api/leaverequest/' + request.id + '/changestatus/rejected', request)
-      .map(response => new LeaveRequest(response.json()))
+  public rejectedLeaveRequest(leave: LeaveRequest): Observable<LeaveRequest> {
+    return this.http.put(API_URL + '/api/leaverequest/' + leave.id + '/changestatus/rejected', leave)
+      .map(response => {
+        const request = response.json();
+        const leaverequest: LeaveRequest = {
+          id: request.id,
+          personId: request.personId,
+          typeAbsence: request.typeAbsence,
+          leaveFrom: request.leaveFrom,
+          leaveTo: request.leaveTo,
+          daysTaken: request.daysTaken,
+          requestDate: request.requestDate,
+          approvalManagerDate: request.approvalManagerDate,
+          approvalHRDate: request.approvalHRDate,
+          status: request.status,
+          description: request.description
+        }
+        return leaverequest;
+      })
       .catch(this.handleError);
   }
 
