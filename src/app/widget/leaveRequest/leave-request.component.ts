@@ -4,7 +4,7 @@ import {Person} from '../../model/person';
 import {SelectItem} from 'primeng/primeng';
 import {LeaveRequestDataService} from '../../service/leave-request-data.service';
 import {PersonDataService} from '../../service/person-data.service';
-import {createUrlResolverWithoutPackagePrefix} from '@angular/compiler';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-leave-request',
@@ -101,8 +101,8 @@ export class LeaveRequestComponent implements OnInit {
 
   changeDaysTaken(): void {
     let nb = 0;
-    const currentDate: Date = new Date(this.leaveRequest.leaveFrom);
-    const endDate: Date = new Date(this.leaveRequest.leaveTo);
+    const currentDate = moment(this.leaveRequest.leaveFrom).toDate();
+    const endDate = moment(this.leaveRequest.leaveTo).toDate();
     for (let i = 0; currentDate <= endDate && i < 100; ++i) {
       // depend of first day of week. here, first day is Sunday == 0 and Saturday == 6
       if (currentDate.getDay() > 0 && currentDate.getDay() < 6) {
@@ -116,8 +116,7 @@ export class LeaveRequestComponent implements OnInit {
   }
 
   changeMaxDate(): void {
-    this.maxDate = new Date();
-    this.maxDate.setDate(this.leaveRequest.leaveFrom.getDate());
+    this.maxDate = moment(this.leaveRequest.leaveFrom).toDate();
     for (let i = 1; i < this.daysTotal; ++i) {
       this.maxDate.setDate(this.maxDate.getDate() + 1);
       // depend of first day of week. here, first day is Sunday == 0 and Saturday == 6

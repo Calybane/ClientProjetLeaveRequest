@@ -8,6 +8,7 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
+import {LeaveRequestView} from '../view/leave-request-view';
 
 const API_URL = environment.apiUrl;
 
@@ -32,6 +33,16 @@ export class LeaveRequestDataService {
       .map(response => {
         const requests = response.json().content;
         return requests.map(request => new LeaveRequest(request));
+      })
+      .catch(this.handleError);
+  }
+
+
+  public getAllLeaveRequestsView(): Observable<LeaveRequest[]> {
+    return this.http.get(API_URL + '/api/leaverequest')
+      .map(response => {
+        const requests = response.json().content;
+        return requests.map(request => new LeaveRequestView(request));
       })
       .catch(this.handleError);
   }
@@ -98,13 +109,6 @@ export class LeaveRequestDataService {
       .catch(this.handleError);
   }
 
-  /*
-  public generatePDF(request: LeaveRequest): Observable<any> {
-    return this.http.get(API_URL + '/api/leaverequest/' + request.id + '/pdf', request)
-      .map(response => request)
-      .catch(this.handleError);
-  }
-  */
 
   private handleError (error: Response | any) {
     console.error('ApiLeaveRequestService::handleError', error);

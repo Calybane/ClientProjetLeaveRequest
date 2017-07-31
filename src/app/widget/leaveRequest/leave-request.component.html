@@ -20,7 +20,7 @@
         <div class="col-sm-6 nopadding">
           <label>From :</label>
           <br>
-          <p-calendar  dateFormat="dd/mm/yy" name="startDate" [disabledDays]="[0,6]" (onClose)="changeDaysTaken();" [disabledDates]="disabledDates" [(ngModel)]="leaveRequest.leaveFrom" [minDate]="minDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="2017:2030" required></p-calendar>
+          <p-calendar dateFormat="dd/mm/yy" name="startDate" [disabledDays]="[0,6]" (onClose)="changeDaysTaken();" [disabledDates]="disabledDates" [(ngModel)]="leaveRequest.leaveFrom" [minDate]="minDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="2017:2030" required></p-calendar>
         </div>
 
         <div class="col-sm-6 nopadding">
@@ -51,6 +51,11 @@
 
     <div class="form-group">
       <label>Number of annual leave days left :</label> {{daysTotal - leaveRequest.daysTaken}}
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description :</label>
+      <textarea class="form-control" rows="2" id="description" name="description" [(ngModel)]="leaveRequest.description"></textarea>
     </div>
 
     <hr>

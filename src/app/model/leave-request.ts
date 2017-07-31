@@ -1,21 +1,21 @@
 
+import * as moment from 'moment';
+
 export class LeaveRequest {
   id: number;
   personId: number;
   typeAbsence: string;
-  leaveFrom: Date = new Date();
-  leaveTo: Date = new Date();
+  leaveFrom: Date = moment().toDate();
+  leaveTo: Date = moment().toDate();
   daysTaken: number = 1;
-  requestDate: Date = new Date();
-  approvalManagerDate: Date = null;
-  approvalHRDate: Date = null;
+  requestDate: any = moment();
+  approvalManagerDate: any = null;
+  approvalHRDate: any = null;
   status: string = '';
+  description: string = '';
 
   constructor(values: Object = {}) {
     this.setDates();
-    this.leaveFrom.setHours(0, 0, 0, 0);
-    this.leaveTo.setHours(0, 0, 0, 0);
-
     Object.assign(this, values);
   }
 
