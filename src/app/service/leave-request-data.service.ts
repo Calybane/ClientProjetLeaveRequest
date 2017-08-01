@@ -58,9 +58,10 @@ export class LeaveRequestDataService {
         return requests.json().map(request => {
           const view: LeaveRequestView = {
             id: request.id,
+            title: request.description,
             start: moment(request.leaveFrom).format('YYYY-MM-DD'),
             end: moment(request.leaveTo).add(1, 'day').format('YYYY-MM-DD'),
-            title: request.description,
+            status: request.status
           };
           return view;
         });
@@ -106,25 +107,9 @@ export class LeaveRequestDataService {
   }
 
 
-  public createLeaveRequest(leave: LeaveRequest): Observable<LeaveRequest> {
+  public createLeaveRequest(leave: LeaveRequest): Observable<boolean> {
     return this.http.post(API_URL + '/api/leaverequest', leave)
-      .map(response => {
-        const request = response.json();
-        const leaverequest: LeaveRequest = {
-          id: request.id,
-          personId: request.personId,
-          typeAbsence: request.typeAbsence,
-          leaveFrom: request.leaveFrom,
-          leaveTo: request.leaveTo,
-          daysTaken: request.daysTaken,
-          requestDate: request.requestDate,
-          approvalManagerDate: request.approvalManagerDate,
-          approvalHRDate: request.approvalHRDate,
-          status: request.status,
-          description: request.description
-        }
-        return leaverequest;
-      })
+      .map(response => response)
       .catch(this.handleError);
   }
 

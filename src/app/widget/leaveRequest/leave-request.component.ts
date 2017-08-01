@@ -19,6 +19,7 @@ export class LeaveRequestComponent implements OnInit {
   maxDate: Date;
   validForm: boolean;
   showWellSpecial: boolean;
+  requestSubmitted: string;
   daysTotal: number;
   types: SelectItem[];
 
@@ -32,6 +33,8 @@ export class LeaveRequestComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.requestSubmitted = '';
+
     this.setLeaveRequest();
     this.minDate = moment(this.leaveRequest.leaveFrom).toDate();
 
@@ -54,14 +57,31 @@ export class LeaveRequestComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.leaveRequestValid())
-    {
-      this.createLeaveRequest();
-      console.log('Request submited');
+    if (this.leaveRequestValid()) {
+      if (this.createLeaveRequest()) {
+        this.requestSubmitted = 'Request submitted';
+      } else {
+        this.requestSubmitted = 'Error: The request can not be submitted';
+      }
+    } else {
+      this.requestSubmitted = 'Request not valid';
     }
-    else
-    {
-      console.log('Leave Request not valid');
+  }
+
+  leaveRequestValid(): boolean {
+    return this.leaveRequest.leaveFrom <= this.leaveRequest.leaveTo
+      && this.leaveRequest.daysTaken > 0
+      && this.leaveRequest.daysTaken <= this.daysTotal;
+  }
+
+  createLeaveRequest(): boolean {
+    if (this.leaveRequestDataService.createLeaveRequest(this.leaveRequest).subscribe()) {
+      this.setLeaveRequest();
+      this.leaveRequest.typeAbsence = this.types[0].value;
+      this.leaveRequest.personId = this.person.id;
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -84,26 +104,12 @@ export class LeaveRequestComponent implements OnInit {
     this.setDates();
   }
 
-  createLeaveRequest() {
-    this.leaveRequestDataService.createLeaveRequest(this.leaveRequest).subscribe(reponse => {
-      this.setLeaveRequest();
-      this.leaveRequest.typeAbsence = this.types[0].value;
-      this.leaveRequest.personId = this.person.id;
-    });
-  }
-
   onChangeTypes() {
     if (this.leaveRequest.typeAbsence === 'Special leave') {
       this.showWellSpecial = true;
     } else {
       this.showWellSpecial = false;
     }
-  }
-
-  leaveRequestValid(): boolean {
-    return this.leaveRequest.leaveFrom <= this.leaveRequest.leaveTo
-      && this.leaveRequest.daysTaken > 0
-      && this.leaveRequest.daysTaken <= this.daysTotal;
   }
 
   changeDaysTaken(): void {
