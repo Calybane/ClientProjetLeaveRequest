@@ -32,7 +32,7 @@ export class LeaveRequestDataService {
       .map(requests => {
         return requests.json().content.map(leave => {
           const request = leave.json();
-          const leaverequest: LeaveRequest = {
+          return {
             id: request.id,
             personId: request.personId,
             typeAbsence: request.typeAbsence,
@@ -44,8 +44,7 @@ export class LeaveRequestDataService {
             approvalHRDate: request.approvalHRDate,
             status: request.status,
             description: request.description
-          }
-          return leaverequest;
+          };
         });
       })
       .catch(this.handleError);
@@ -56,14 +55,14 @@ export class LeaveRequestDataService {
     return this.http.get(API_URL + '/api/leaverequest/views')
       .map(requests => {
         return requests.json().map(request => {
-          const view: LeaveRequestView = {
+          return {
             id: request.id,
             title: request.description,
             start: moment(request.leaveFrom).format('YYYY-MM-DD'),
             end: moment(request.leaveTo).add(1, 'day').format('YYYY-MM-DD'),
-            status: request.status
+            status: request.status,
+            color: (request.status.startsWith('Waiting') ? '#9e9e9e' : (request.status === 'Approved by manager' ? '#ffad33' : '#79d279'))
           };
-          return view;
         });
       })
       .catch(this.handleError);
@@ -84,11 +83,18 @@ export class LeaveRequestDataService {
   }
 
 
+  public getAllDisabledDatesByPersonId(personId: number): Observable <Date[]> {
+    return this.http.get(API_URL + '/api/leaverequest/person/' + personId + '/disableddates')
+      .map(response => response.json())
+      .catch(this.handleError);
+  }
+
+
   public getLeaveRequestById(requestId: number): Observable<LeaveRequest> {
     return this.http.get(API_URL + '/api/leaverequest/' + requestId)
       .map(response => {
         const request = response.json();
-        const leaverequest: LeaveRequest = {
+        return {
           id: request.id,
           personId: request.personId,
           typeAbsence: request.typeAbsence,
@@ -100,8 +106,7 @@ export class LeaveRequestDataService {
           approvalHRDate: request.approvalHRDate,
           status: request.status,
           description: request.description
-        }
-        return leaverequest;
+        };
       })
       .catch(this.handleError);
   }
@@ -118,7 +123,7 @@ export class LeaveRequestDataService {
     return this.http.put(API_URL + '/api/leaverequest/' + leave.id, leave)
       .map(response => {
         const request = response.json();
-        const leaverequest: LeaveRequest = {
+        return {
           id: request.id,
           personId: request.personId,
           typeAbsence: request.typeAbsence,
@@ -130,8 +135,7 @@ export class LeaveRequestDataService {
           approvalHRDate: request.approvalHRDate,
           status: request.status,
           description: request.description
-        }
-        return leaverequest;
+        };
       })
       .catch(this.handleError);
   }
@@ -148,7 +152,7 @@ export class LeaveRequestDataService {
     return this.http.put(API_URL + '/api/leaverequest/' + leave.id + '/changestatus/approved/manager', leave)
       .map(response => {
         const request = response.json();
-        const leaverequest: LeaveRequest = {
+        return {
           id: request.id,
           personId: request.personId,
           typeAbsence: request.typeAbsence,
@@ -160,8 +164,7 @@ export class LeaveRequestDataService {
           approvalHRDate: request.approvalHRDate,
           status: request.status,
           description: request.description
-        }
-        return leaverequest;
+        };
       })
       .catch(this.handleError);
   }
@@ -171,7 +174,7 @@ export class LeaveRequestDataService {
     return this.http.put(API_URL + '/api/leaverequest/' + leave.id + '/changestatus/approved/hr', leave)
       .map(response => {
         const request = response.json();
-        const leaverequest: LeaveRequest = {
+        return {
           id: request.id,
           personId: request.personId,
           typeAbsence: request.typeAbsence,
@@ -183,8 +186,7 @@ export class LeaveRequestDataService {
           approvalHRDate: request.approvalHRDate,
           status: request.status,
           description: request.description
-        }
-        return leaverequest;
+        };
       })
       .catch(this.handleError);
   }
@@ -194,7 +196,7 @@ export class LeaveRequestDataService {
     return this.http.put(API_URL + '/api/leaverequest/' + leave.id + '/changestatus/rejected', leave)
       .map(response => {
         const request = response.json();
-        const leaverequest: LeaveRequest = {
+        return {
           id: request.id,
           personId: request.personId,
           typeAbsence: request.typeAbsence,
@@ -206,8 +208,7 @@ export class LeaveRequestDataService {
           approvalHRDate: request.approvalHRDate,
           status: request.status,
           description: request.description
-        }
-        return leaverequest;
+        };
       })
       .catch(this.handleError);
   }

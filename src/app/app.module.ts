@@ -3,7 +3,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
-import {CalendarModule, DataTableModule, DialogModule, PanelMenuModule, SelectButtonModule, ScheduleModule} from 'primeng/primeng';
+import {CalendarModule, DataTableModule, DialogModule, PanelMenuModule, SelectButtonModule, ScheduleModule, GMapModule} from 'primeng/primeng';
 
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './widget/header/header.component';
@@ -45,6 +45,7 @@ import {ScheduleComponent} from './widget/schedule/schedule.component';
     PanelMenuModule,
     CalendarModule,
     ScheduleModule,
+    GMapModule,
     SelectButtonModule,
     DataTableModule,
     DialogModule,

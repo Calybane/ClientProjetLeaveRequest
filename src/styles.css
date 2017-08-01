@@ -88,10 +88,24 @@ body .override-primeng-datatable .ui-datatable .ui-datatable-data tr.ui-state-hi
 
 /* Schedule */
 
-.event-waiting {
-  color: orange;
-  background-color: orange;
+.schedule-div .fc-toolbar.fc-header-toolbar {
+  margin-bottom: 5px;
 }
-.fc-toolbar h2 {
+.schedule-div .fc-toolbar.fc-header-toolbar .fc-left {
+  margin-bottom: 5px;
+}
+.schedule-div .fc-toolbar.fc-header-toolbar .fc-right {
+  margin-bottom: 5px;
+}
+.schedule-div .fc-toolbar.fc-header-toolbar .fc-center {
+  margin-top: 5px;
+}
+.schedule-div .fc-toolbar.fc-header-toolbar h2 {
   font-size: 1.7em;
+}
+.fc-scroller.fc-time-grid-container {
+  min-height: 250px;
+}
+.fc-day.ui-widget-content.fc-tue.fc-today.ui-state-highlight {
+  /* background-color: #2b8bde; */
 }

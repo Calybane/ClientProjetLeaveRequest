@@ -4,6 +4,6 @@
 }
 @media (max-width: 767px) {
   .nopadding{
-    padding-bottom: 10px;
+    padding: 0 5px 10px;
   }
 }
