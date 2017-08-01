@@ -22,6 +22,8 @@ export class LeaveRequestComponent implements OnInit {
   daysTotal: number;
   types: SelectItem[];
 
+  fr: any;
+
   disabledDates: Date[] = Array<Date>();
 
   person: Person;
@@ -34,7 +36,6 @@ export class LeaveRequestComponent implements OnInit {
 
   ngOnInit() {
     this.setLeaveRequest();
-    this.minDate = moment(this.leaveRequest.leaveFrom).toDate();
 
     this.types = [];
     this.leaveRequestDataService.getAllTypesAbsence().subscribe(response => {
@@ -141,13 +142,13 @@ export class LeaveRequestComponent implements OnInit {
     // set date to next open day
     if (this.leaveRequest.leaveFrom.getDay() === 5) {
       this.leaveRequest.leaveFrom = moment(this.leaveRequest.leaveFrom).add(3, 'day').toDate();
-      this.leaveRequest.leaveTo = moment(this.leaveRequest.leaveFrom).add(3, 'day').toDate();
+      this.leaveRequest.leaveTo = moment(this.leaveRequest.leaveTo).add(3, 'day').toDate();
     } else if (this.leaveRequest.leaveFrom.getDay() === 6) {
       this.leaveRequest.leaveFrom = moment(this.leaveRequest.leaveFrom).add(2, 'day').toDate();
-      this.leaveRequest.leaveTo = moment(this.leaveRequest.leaveFrom).add(2, 'day').toDate();
+      this.leaveRequest.leaveTo = moment(this.leaveRequest.leaveTo).add(2, 'day').toDate();
     } else {
       this.leaveRequest.leaveFrom = moment(this.leaveRequest.leaveFrom).add(1, 'day').toDate();
-      this.leaveRequest.leaveTo = moment(this.leaveRequest.leaveFrom).add(1, 'day').toDate();
+      this.leaveRequest.leaveTo = moment(this.leaveRequest.leaveTo).add(1, 'day').toDate();
     }
   }
 
@@ -167,7 +168,7 @@ export class LeaveRequestComponent implements OnInit {
       requests.forEach(date => {
         this.disabledDates.push(moment(date).toDate());
       });
-      this.disabledDates.map(d => d);
+      this.minDate = moment(this.leaveRequest.leaveFrom).toDate();
     });
   }
 

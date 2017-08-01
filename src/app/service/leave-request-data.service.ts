@@ -61,7 +61,7 @@ export class LeaveRequestDataService {
             start: moment(request.leaveFrom).format('YYYY-MM-DD'),
             end: moment(request.leaveTo).add(1, 'day').format('YYYY-MM-DD'),
             status: request.status,
-            color: (request.status.startsWith('Waiting') ? '#9e9e9e' : (request.status === 'Approved by manager' ? '#ffad33' : '#79d279'))
+            color: (request.status.startsWith('Waiting') ? '#9e9e9e' : (request.status === 'Approved by manager' ? '#ff9900' : '#339933'))
           };
         });
       })
