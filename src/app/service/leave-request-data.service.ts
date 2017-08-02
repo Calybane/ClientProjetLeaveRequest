@@ -43,6 +43,7 @@ export class LeaveRequestDataService {
             approvalManagerDate: request.approvalManagerDate,
             approvalHRDate: request.approvalHRDate,
             status: request.status,
+            author: request.author,
             description: request.description
           };
         });
@@ -57,11 +58,13 @@ export class LeaveRequestDataService {
         return requests.json().map(request => {
           return {
             id: request.id,
-            title: request.description,
+            title: request.author + ' : ' + request.description,
             start: moment(request.leaveFrom).format('YYYY-MM-DD'),
             end: moment(request.leaveTo).add(1, 'day').format('YYYY-MM-DD'),
             status: request.status,
-            color: (request.status.startsWith('Waiting') ? '#9e9e9e' : (request.status === 'Approved by manager' ? '#ff9900' : '#339933'))
+            color: (request.status.startsWith('Waiting') ? '#9e9e9e' : (request.status === 'Approved by manager' ? '#ff9900' : '#339933')),
+            author: request.author,
+            description: request.description
           };
         });
       })
@@ -105,6 +108,7 @@ export class LeaveRequestDataService {
           approvalManagerDate: request.approvalManagerDate,
           approvalHRDate: request.approvalHRDate,
           status: request.status,
+          author: request.author,
           description: request.description
         };
       })
@@ -134,6 +138,7 @@ export class LeaveRequestDataService {
           approvalManagerDate: request.approvalManagerDate,
           approvalHRDate: request.approvalHRDate,
           status: request.status,
+          author: request.author,
           description: request.description
         };
       })
@@ -163,6 +168,7 @@ export class LeaveRequestDataService {
           approvalManagerDate: request.approvalManagerDate,
           approvalHRDate: request.approvalHRDate,
           status: request.status,
+          author: request.author,
           description: request.description
         };
       })
@@ -185,6 +191,7 @@ export class LeaveRequestDataService {
           approvalManagerDate: request.approvalManagerDate,
           approvalHRDate: request.approvalHRDate,
           status: request.status,
+          author: request.author,
           description: request.description
         };
       })
@@ -207,6 +214,7 @@ export class LeaveRequestDataService {
           approvalManagerDate: request.approvalManagerDate,
           approvalHRDate: request.approvalHRDate,
           status: request.status,
+          author: request.author,
           description: request.description
         };
       })

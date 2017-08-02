@@ -50,6 +50,7 @@ export class LeaveRequestComponent implements OnInit {
       this.person = person;
       this.daysTotal = this.person.daysLeft;
       this.leaveRequest.personId = this.person.id;
+      this.leaveRequest.author = this.person.firstname + ' ' + this.person.lastname;
       this.validForm = this.daysTotal > 0 && this.leaveRequest.daysTaken <= this.daysTotal && this.leaveRequest.leaveFrom <= this.leaveRequest.leaveTo;
 
       this.changeMaxDate();
@@ -68,6 +69,7 @@ export class LeaveRequestComponent implements OnInit {
         this.setLeaveRequest();
         this.leaveRequest.typeAbsence = this.types[0].value;
         this.leaveRequest.personId = this.person.id;
+        this.leaveRequest.author = this.person.firstname + ' ' + this.person.lastname;
       } else {
         this.requestSubmitted = {
           message: 'The request can not be submitted',
@@ -90,8 +92,8 @@ export class LeaveRequestComponent implements OnInit {
   }
 
   createLeaveRequest(): boolean {
-    this.leaveRequest.description = this.person.firstname + ' ' + this.person.lastname
-      + (this.leaveRequest.description ? (' : ' + this.leaveRequest.description) : '');
+    console.log(this.person.firstname);
+    console.log(this.leaveRequest.author);
     if (this.leaveRequestDataService.createLeaveRequest(this.leaveRequest).subscribe()) {
       return true;
     } else {
@@ -100,7 +102,6 @@ export class LeaveRequestComponent implements OnInit {
   }
 
   setLeaveRequest(): void {
-    this.leaveRequest = null;
     this.leaveRequest = {
       id: null,
       personId: 0,
@@ -112,6 +113,7 @@ export class LeaveRequestComponent implements OnInit {
       approvalManagerDate: null,
       approvalHRDate: null,
       status: '',
+      author: '',
       description: ''
     };
 
