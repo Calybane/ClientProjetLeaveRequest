@@ -1,7 +1,7 @@
 
 export interface LeaveRequest {
   id: number;
-  personId: number;
+  login: string;
   typeAbsence: string;
   leaveFrom: Date;
   leaveTo: Date;
@@ -10,6 +10,5 @@ export interface LeaveRequest {
   approvalManagerDate: Date;
   approvalHRDate: Date;
   status: string;
-  author: string;
   description: string;
 }

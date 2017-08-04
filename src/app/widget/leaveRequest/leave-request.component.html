@@ -4,7 +4,11 @@
 
     <br>
 
-    <form #f="ngForm" (ngSubmit)="onSubmit()" ngNativeValidate class="formRequest row">
+    <div *ngIf="userDaysLeft() < 1" class="alert alert-warning">
+      <strong>Attention! </strong> You have {{userDaysLeft()}} days left, you can not create a new leave request.
+    </div>
+
+    <form #f="ngForm" (ngSubmit)="onSubmit()" ngNativeValidate class="formRequest row" *ngIf="userDaysLeft() > 0">
 
       <div class="form-group">
         <label>Please choose type of absence :</label><br>
@@ -38,7 +42,7 @@
           </div>
         </div>
 
-        <div *ngIf="(daysTotal - leaveRequest.daysTaken) < 0">
+        <div *ngIf="(userDaysLeft() - leaveRequest.daysTaken) < 0">
           <br>
           <div class="alert alert-danger">
             <strong>Attention! </strong>The number of days left are incorrect.
@@ -51,7 +55,7 @@
       </div>
 
       <div class="form-group">
-        <label>Number of annual leave days left :</label> {{daysTotal - leaveRequest.daysTaken}}
+        <label>Number of annual leave days left :</label> {{userDaysLeft() - leaveRequest.daysTaken}}
       </div>
 
       <div class="form-group">
@@ -68,23 +72,17 @@
             {{leaveRequest.requestDate | date : 'fullDate'}}
           </div>
 
-          <!--
           <div class="col-sm-6 nopadding">
-            <label>signature - employee :</label><br>
-            signature temp
+            <button type="submit" class="btn btn-default btn-lg pull-right" [disabled]="!validForm">Submit request</button>
           </div>
-          -->
         </div>
       </div>
 
       <div class="col-xs-12"><br></div>
 
       <div [class]="requestSubmitted.style" *ngIf="requestSubmitted">
-        <strong>Attention! </strong>{{requestSubmitted.message}}
+        {{requestSubmitted.message}}
       </div>
-
-      <button type="submit" class="btn btn-default btn-lg pull-right" [disabled]="!validForm">Submit request</button>
-
     </form>
 
   </div>

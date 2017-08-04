@@ -3,7 +3,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
-import {CalendarModule, DataTableModule, DialogModule, PanelMenuModule, SelectButtonModule, ScheduleModule, GMapModule} from 'primeng/primeng';
+import {CalendarModule, DataTableModule, DialogModule, ScheduleModule, SelectButtonModule} from 'primeng/primeng';
 
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './widget/header/header.component';
@@ -19,11 +19,12 @@ import {RequestsApprobationComponent} from './widget/requestsApprobation/request
 import {SigninComponent} from './widget/signin/signin.component';
 import {AuthenticationService} from './service/authentication.service';
 import {CustomHttp} from './service/custom-http.service';
-import {PersonDataService} from './service/person-data.service';
+import {UserService} from './service/user.service';
 import {SharedService} from './service/shared.service';
 import {RolesService} from './service/roles.service';
-import {LeaveRequestDataService} from './service/leave-request-data.service';
+import {LeaveRequestService} from './service/leave-request.service';
 import {ScheduleComponent} from './widget/schedule/schedule.component';
+import {SetupTableComponent} from './widget/setup-table/setup-table.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import {ScheduleComponent} from './widget/schedule/schedule.component';
     ListRequestsComponent,
     RequestsApprobationComponent,
     SigninComponent,
-    ScheduleComponent
+    ScheduleComponent,
+    SetupTableComponent
   ],
   imports: [
     BrowserModule,
@@ -42,10 +44,8 @@ import {ScheduleComponent} from './widget/schedule/schedule.component';
     NoopAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    PanelMenuModule,
     CalendarModule,
     ScheduleModule,
-    GMapModule,
     SelectButtonModule,
     DataTableModule,
     DialogModule,
@@ -54,12 +54,12 @@ import {ScheduleComponent} from './widget/schedule/schedule.component';
   providers: [
     {provide: Http, useClass: CustomHttp},
     {provide: ConnectionBackend, useClass: XHRBackend},
-    AuthGuard,
-    AuthenticationService,
-    LeaveRequestDataService,
-    PersonDataService,
     SharedService,
-    RolesService
+    LeaveRequestService,
+    UserService,
+    RolesService,
+    AuthGuard,
+    AuthenticationService
   ],
   bootstrap: [AppComponent]
 })

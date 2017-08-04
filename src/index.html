@@ -16,8 +16,8 @@
 <body>
   <script>
     $(function() {
-      $('.nav a.link').on('click', function(){
-        if($('.navbar-toggle').css('display') != 'none'){
+      $('a.link').on('click', function(){
+        if($('.navbar-toggle').css('display') === 'block'){
           $(".navbar-toggle").trigger( "click" );
         }
       });

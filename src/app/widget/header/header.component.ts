@@ -31,4 +31,8 @@ export class HeaderComponent implements OnInit {
     return this.sharedService.isSimpleUser();
   }
 
+  isHR(): boolean {
+    return this.sharedService.isHR();
+  }
+
 }

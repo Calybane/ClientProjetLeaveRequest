@@ -1,44 +1,47 @@
 import {Component, OnInit} from '@angular/core';
 import {LeaveRequest} from '../../model/leave-request';
-import {Person} from '../../model/person';
 import {SelectItem} from 'primeng/primeng';
-import {LeaveRequestDataService} from '../../service/leave-request-data.service';
-import {PersonDataService} from '../../service/person-data.service';
+import {LeaveRequestService} from '../../service/leave-request.service';
+import {UserService} from '../../service/user.service';
+import {SharedService} from '../../service/shared.service';
 import * as moment from 'moment';
+import 'moment/locale/fr';
+import {User} from '../../model/user';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-leave-request',
   templateUrl: './leave-request.component.html',
   styleUrls: ['./leave-request.component.css'],
-  providers: [LeaveRequestDataService, PersonDataService]
+  providers: [LeaveRequestService, UserService]
 })
 
 export class LeaveRequestComponent implements OnInit {
 
   minDate: Date;
   maxDate: Date;
-  validForm: boolean;
+  validForm: boolean = false;
   showWellSpecial: boolean;
-  daysTotal: number;
   types: SelectItem[];
 
-  fr: any;
-
   disabledDates: Date[] = Array<Date>();
-
-  person: Person;
 
   leaveRequest: LeaveRequest;
   requestSubmitted: RequestSubmit;
 
-  constructor(private leaveRequestDataService: LeaveRequestDataService, private personService: PersonDataService, private leaveRequestService: LeaveRequestDataService) {
-  }
+  constructor(private leaveRequestService: LeaveRequestService,
+              private userService: UserService,
+              private sharedService: SharedService,
+              private router: Router) {}
 
   ngOnInit() {
     this.setLeaveRequest();
 
+    this.minDate = this.leaveRequest.leaveFrom;
+    this.maxDate = moment().toDate();
+
     this.types = [];
-    this.leaveRequestDataService.getAllTypesAbsence().subscribe(response => {
+    this.leaveRequestService.getAllTypesAbsence().subscribe(response => {
       response.forEach(type => {
         this.types.push({label: type, value: type});
       });
@@ -46,36 +49,37 @@ export class LeaveRequestComponent implements OnInit {
       this.onChangeTypes();
     });
 
-    this.personService.getPersonById(1).subscribe(person => {
-      this.person = person;
-      this.daysTotal = this.person.daysLeft;
-      this.leaveRequest.personId = this.person.id;
-      this.leaveRequest.author = this.person.firstname + ' ' + this.person.lastname;
-      this.validForm = this.daysTotal > 0 && this.leaveRequest.daysTaken <= this.daysTotal && this.leaveRequest.leaveFrom <= this.leaveRequest.leaveTo;
+    this.changeMaxDate();
 
-      this.changeMaxDate();
+    this.initialize();
+  }
+
+  initialize() {
+    if (!this.sharedService.user.login) {
+      this.userService.getUserConnected().subscribe(user => {
+        if (user) {
+          this.sharedService.user = user;
+          this.sharedService.getRoles();
+          this.leaveRequest.login = this.sharedService.user.login;
+          this.setDisabledDates();
+        } else {
+          console.log('User not connected');
+          this.router.navigate(['/signin']);
+          return;
+        }
+      }, error => {
+        console.log('Error : user not connected');
+        this.router.navigate(['/signin']);
+        return;
+      });
+    } else {
       this.setDisabledDates();
-    });
+    }
   }
 
   onSubmit() {
     if (this.leaveRequestValid()) {
-      if (this.createLeaveRequest()) {
-        this.requestSubmitted = {
-          message: 'Request submitted',
-          style: 'alert alert-success'
-        };
-        this.addDisabledDates(this.leaveRequest.leaveFrom, this.leaveRequest.leaveTo);
-        this.setLeaveRequest();
-        this.leaveRequest.typeAbsence = this.types[0].value;
-        this.leaveRequest.personId = this.person.id;
-        this.leaveRequest.author = this.person.firstname + ' ' + this.person.lastname;
-      } else {
-        this.requestSubmitted = {
-          message: 'The request can not be submitted',
-          style: 'alert alert-warning'
-        };
-      }
+      this.createLeaveRequest();
     } else {
       this.requestSubmitted = {
         message: 'The request is not valid',
@@ -84,27 +88,50 @@ export class LeaveRequestComponent implements OnInit {
     }
   }
 
+  userDaysLeft(): number {
+    return this.sharedService.user.daysLeft;
+  }
+
   leaveRequestValid(): boolean {
     return this.leaveRequest.leaveFrom <= this.leaveRequest.leaveTo
       && this.leaveRequest.daysTaken > 0
-      && this.leaveRequest.daysTaken <= this.daysTotal
+      && this.leaveRequest.daysTaken <= this.userDaysLeft()
       && !this.intersectDates(this.leaveRequest.leaveFrom, this.leaveRequest.leaveTo, this.disabledDates);
   }
 
-  createLeaveRequest(): boolean {
-    console.log(this.person.firstname);
-    console.log(this.leaveRequest.author);
-    if (this.leaveRequestDataService.createLeaveRequest(this.leaveRequest).subscribe()) {
-      return true;
-    } else {
-      return false;
-    }
+  createLeaveRequest() {
+    this.leaveRequestService.createLeaveRequest(this.leaveRequest).subscribe(request => {
+      if (request) {
+        this.requestSubmitted = {
+          message: 'Request submitted',
+          style: 'alert alert-success'
+        };
+        const user: User = {login: this.sharedService.user.login, daysLeft: (this.sharedService.user.daysLeft - this.leaveRequest.daysTaken)}
+        this.userService.updateUser(user).subscribe(response => {
+          this.sharedService.user = response;
+          this.setValidForm();
+        });
+        this.addDisabledDates(this.leaveRequest.leaveFrom, this.leaveRequest.leaveTo);
+        this.setLeaveRequest();
+        this.leaveRequest.typeAbsence = this.types[0].value;
+      } else {
+        this.requestSubmitted = {
+          message: 'The request is not valid',
+          style: 'alert alert-danger'
+        };
+      }
+    }, error => {
+      this.requestSubmitted = {
+        message: 'The request can not be submitted',
+        style: 'alert alert-danger'
+      };
+    });
   }
 
   setLeaveRequest(): void {
     this.leaveRequest = {
       id: null,
-      personId: 0,
+      login: this.sharedService.user.login,
       typeAbsence: '',
       leaveFrom: moment().toDate(),
       leaveTo: moment().toDate(),
@@ -113,31 +140,21 @@ export class LeaveRequestComponent implements OnInit {
       approvalManagerDate: null,
       approvalHRDate: null,
       status: '',
-      author: '',
       description: ''
     };
 
     this.setDates();
   }
 
-  onChangeTypes() {
-    return (this.leaveRequest.typeAbsence === 'Special leave');
+  setValidForm() {
+    this.validForm = this.userDaysLeft() > 0
+      && this.leaveRequest.daysTaken <= this.userDaysLeft()
+      && moment(this.leaveRequest.leaveFrom.toISOString()).toDate() <= moment(this.leaveRequest.leaveTo.toISOString()).toDate()
+      && !this.intersectDates(this.leaveRequest.leaveFrom, this.leaveRequest.leaveTo, this.disabledDates);
   }
 
-  changeDaysTaken(): void {
-    let nb = 0;
-    let currentDate = moment(this.leaveRequest.leaveFrom).toDate();
-    const endDate = moment(this.leaveRequest.leaveTo).toDate();
-    for (let i = 0; currentDate <= endDate && i < 100; ++i) {
-      // depend of first day of week. here, first day is Sunday == 0 and Saturday == 6
-      if (currentDate.getDay() > 0 && currentDate.getDay() < 6) {
-        ++nb;
-      }
-      currentDate = moment(currentDate).add(1, 'day').toDate();
-    }
-
-    this.leaveRequest.daysTaken = nb;
-    this.validForm = this.daysTotal > 0 && this.leaveRequest.daysTaken <= this.daysTotal && this.leaveRequest.leaveFrom <= this.leaveRequest.leaveTo;
+  onChangeTypes() {
+    return (this.leaveRequest.typeAbsence === 'Special leave');
   }
 
   setDates(): void {
@@ -154,9 +171,25 @@ export class LeaveRequestComponent implements OnInit {
     }
   }
 
+  changeDaysTaken(): void {
+    let nb = 0;
+    let currentDate = moment(this.leaveRequest.leaveFrom).toDate();
+    const endDate = moment(this.leaveRequest.leaveTo).toDate();
+    for (let i = 0; currentDate <= endDate && i < 100; ++i) {
+      // depend of first day of week. here, first day is Sunday == 0 and Saturday == 6
+      if (currentDate.getDay() > 0 && currentDate.getDay() < 6) {
+        ++nb;
+      }
+      currentDate = moment(currentDate).add(1, 'day').toDate();
+    }
+
+    this.leaveRequest.daysTaken = nb;
+    this.setValidForm();
+  }
+
   changeMaxDate(): void {
     this.maxDate = moment(this.leaveRequest.leaveFrom).toDate();
-    for (let i = 1; i < this.daysTotal; ++i) {
+    for (let i = 1; i < this.userDaysLeft(); ++i) {
       this.maxDate = moment(this.maxDate).add(1, 'day').toDate();
       // depend of first day of week. here, first day is Sunday == 0 and Saturday == 6
       if (this.maxDate.getDay() === 0 || this.maxDate.getDay() === 6) {
@@ -166,11 +199,15 @@ export class LeaveRequestComponent implements OnInit {
   }
 
   setDisabledDates(): void {
-    this.leaveRequestService.getAllDisabledDatesByPersonId(1).subscribe(requests => {
-      requests.forEach(date => {
-        this.disabledDates.push(moment(date).toDate());
-      });
+    this.leaveRequestService.getAllDisabledDatesByLogin(this.sharedService.user.login).subscribe(requests => {
+      if (requests.length > 0) {
+        requests.forEach(date => {
+          this.disabledDates.push(moment(date).toDate());
+        });
+      }
+
       this.minDate = moment(this.leaveRequest.leaveFrom).toDate();
+      this.setValidForm();
     });
   }
 

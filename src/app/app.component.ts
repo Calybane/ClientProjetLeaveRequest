@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {Router} from '@angular/router';
-import {Person} from './model/person';
 import {SharedService} from './service/shared.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -14,13 +13,15 @@ import {SharedService} from './service/shared.service';
 export class AppComponent implements OnInit {
 
   title: string = 'PTL';
-  person: Person;
 
-  constructor(private router: Router, private sharedService: SharedService) {}
+  constructor(private sharedService: SharedService, private router: Router) {}
 
   ngOnInit() {
     if (localStorage.getItem('token')) {
-      this.sharedService.getRoles();
+      this.sharedService.getUserConnected();
+    } else {
+      this.router.navigate(['/signin']);
+      return;
     }
   }
 

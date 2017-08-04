@@ -11,9 +11,6 @@ ul.dropdown-menu > li > a{
 .navbar-brand{
   font-size: 1.3em;
 }
-a.navbar-brand.text{
-  padding-top: 14px;
-}
 .navbar-brand>img.img-responsive{
   padding-top: 0px;
   padding-bottom: 4px;
