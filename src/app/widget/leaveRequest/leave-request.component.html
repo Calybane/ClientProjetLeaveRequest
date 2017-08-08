@@ -1,4 +1,4 @@
-<div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 page-right nopadding">
+<div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 page-right nopadding div-request-form">
   <div>
     <h2>Leave of absence - Request form</h2>
 
@@ -51,7 +51,7 @@
       </div>
 
       <div class="form-group">
-        <label>Number of days taken :</label> {{leaveRequest.daysTaken}}
+        <label>Number of days taken :</label> {{leaveRequest.daysTaken}} *
       </div>
 
       <div class="form-group">
@@ -60,7 +60,7 @@
 
       <div class="form-group">
         <label for="description">Description :</label>
-        <textarea class="form-control" rows="2" id="description" name="description" [(ngModel)]="leaveRequest.description"></textarea>
+        <textarea class="form-control" rows="2" id="description" name="description" maxlength="255" [(ngModel)]="leaveRequest.description"></textarea>
       </div>
 
       <hr>
@@ -83,6 +83,8 @@
       <div [class]="requestSubmitted.style" *ngIf="requestSubmitted">
         {{requestSubmitted.message}}
       </div>
+
+      * If the chosen period includes public holidays, they will be deducted from the total.
     </form>
 
   </div>

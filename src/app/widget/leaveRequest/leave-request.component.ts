@@ -4,13 +4,11 @@ import {SelectItem} from 'primeng/primeng';
 import {LeaveRequestService} from '../../service/leave-request.service';
 import {UserService} from '../../service/user.service';
 import {SharedService} from '../../service/shared.service';
-import * as moment from 'moment';
-import 'moment/locale/fr';
-import {User} from '../../model/user';
 import {Router} from '@angular/router';
+import * as moment from 'moment';
 
 @Component({
-  selector: 'app-leave-request',
+  selector: 'app-ptl-leave-request',
   templateUrl: './leave-request.component.html',
   styleUrls: ['./leave-request.component.css'],
   providers: [LeaveRequestService, UserService]
@@ -35,11 +33,10 @@ export class LeaveRequestComponent implements OnInit {
               private router: Router) {}
 
   ngOnInit() {
-    this.setLeaveRequest();
+    // Initialize the leave request instance
+    this.initializeLeaveRequest();
 
-    this.minDate = this.leaveRequest.leaveFrom;
-    this.maxDate = moment().toDate();
-
+    // Set the absence types
     this.types = [];
     this.leaveRequestService.getAllTypesAbsence().subscribe(response => {
       response.forEach(type => {
@@ -49,34 +46,48 @@ export class LeaveRequestComponent implements OnInit {
       this.onChangeTypes();
     });
 
+    // Set the max dates possible
     this.changeMaxDate();
 
+    // Initialize the user connected, his roles and his disabled dates
     this.initialize();
   }
 
+  // Initialize the user, his roles and his disabled dates
   initialize() {
     if (!this.sharedService.user.login) {
+      // Get the user connected
       this.userService.getUserConnected().subscribe(user => {
         if (user) {
           this.sharedService.user = user;
+
+          // Get his roles
           this.sharedService.getRoles();
           this.leaveRequest.login = this.sharedService.user.login;
+
+          // Set the disabled dates
           this.setDisabledDates();
         } else {
+          // Return on the signin page
           console.log('User not connected');
           this.router.navigate(['/signin']);
           return;
         }
       }, error => {
+        // Return on the signin page
         console.log('Error : user not connected');
         this.router.navigate(['/signin']);
         return;
       });
     } else {
+      // Set the disabled dates
       this.setDisabledDates();
     }
   }
 
+  // Called when the form is submitted
+  // If the form is right, the leave request is created
+  // else a error message is displayed
   onSubmit() {
     if (this.leaveRequestValid()) {
       this.createLeaveRequest();
@@ -88,31 +99,42 @@ export class LeaveRequestComponent implements OnInit {
     }
   }
 
+  // Return the number of days left from the connected user
   userDaysLeft(): number {
     return this.sharedService.user.daysLeft;
   }
 
+  // Return true if the leave request is right, false otherwise
   leaveRequestValid(): boolean {
-    return this.leaveRequest.leaveFrom <= this.leaveRequest.leaveTo
+    return moment.utc(this.leaveRequest.leaveFrom) <= moment.utc(this.leaveRequest.leaveTo)
       && this.leaveRequest.daysTaken > 0
       && this.leaveRequest.daysTaken <= this.userDaysLeft()
-      && !this.intersectDates(this.leaveRequest.leaveFrom, this.leaveRequest.leaveTo, this.disabledDates);
+      && !this.intersectDates(moment.utc(this.leaveRequest.leaveFrom).toDate(),
+                              moment.utc(this.leaveRequest.leaveTo).toDate(),
+                              this.disabledDates);
   }
 
+  // Create the leave request
   createLeaveRequest() {
+    // Add the leave request to the db
     this.leaveRequestService.createLeaveRequest(this.leaveRequest).subscribe(request => {
       if (request) {
+        // Set the message on the screen
         this.requestSubmitted = {
           message: 'Request submitted',
           style: 'alert alert-success'
         };
-        const user: User = {login: this.sharedService.user.login, daysLeft: (this.sharedService.user.daysLeft - this.leaveRequest.daysTaken)}
-        this.userService.updateUser(user).subscribe(response => {
+
+        this.userService.getUserConnected().subscribe(response => {
           this.sharedService.user = response;
           this.setValidForm();
         });
+
+        // Add the dates from the leave request created to the disabled dates
         this.addDisabledDates(this.leaveRequest.leaveFrom, this.leaveRequest.leaveTo);
-        this.setLeaveRequest();
+
+        // Reset the leave request instance
+        this.initializeLeaveRequest();
         this.leaveRequest.typeAbsence = this.types[0].value;
       } else {
         this.requestSubmitted = {
@@ -128,15 +150,16 @@ export class LeaveRequestComponent implements OnInit {
     });
   }
 
-  setLeaveRequest(): void {
+  // Reset the leave request
+  initializeLeaveRequest() {
     this.leaveRequest = {
       id: null,
       login: this.sharedService.user.login,
       typeAbsence: '',
-      leaveFrom: moment().toDate(),
-      leaveTo: moment().toDate(),
+      leaveFrom: moment.utc().toDate(),
+      leaveTo: moment.utc().toDate(),
       daysTaken: 1,
-      requestDate: moment().toDate(),
+      requestDate: moment.utc().toDate(),
       approvalManagerDate: null,
       approvalHRDate: null,
       status: '',
@@ -146,51 +169,57 @@ export class LeaveRequestComponent implements OnInit {
     this.setDates();
   }
 
+  // Set the variable to enable or disable the submit button
   setValidForm() {
-    this.validForm = this.userDaysLeft() > 0
+    this.validForm = moment.utc(this.leaveRequest.leaveFrom) <= moment.utc(this.leaveRequest.leaveTo)
+      && this.userDaysLeft() > 0
       && this.leaveRequest.daysTaken <= this.userDaysLeft()
-      && moment(this.leaveRequest.leaveFrom.toISOString()).toDate() <= moment(this.leaveRequest.leaveTo.toISOString()).toDate()
-      && !this.intersectDates(this.leaveRequest.leaveFrom, this.leaveRequest.leaveTo, this.disabledDates);
+      && !this.intersectDates(moment.utc(this.leaveRequest.leaveFrom).toDate(),
+                              moment.utc(this.leaveRequest.leaveTo).toDate(),
+                              this.disabledDates);
   }
 
+  // Set the variable to show or hide the message about the Special leave
   onChangeTypes() {
-    return (this.leaveRequest.typeAbsence === 'Special leave');
+    this.showWellSpecial = (this.leaveRequest.typeAbsence === 'Special leave');
   }
 
-  setDates(): void {
-    // set date to next open day
+  // Set the dates of the leave request to the next open day
+  setDates() {
     if (this.leaveRequest.leaveFrom.getDay() === 5) {
-      this.leaveRequest.leaveFrom = moment(this.leaveRequest.leaveFrom).add(3, 'day').toDate();
-      this.leaveRequest.leaveTo = moment(this.leaveRequest.leaveTo).add(3, 'day').toDate();
+      this.leaveRequest.leaveFrom = moment.utc(this.leaveRequest.leaveFrom).add(3, 'day').toDate();
+      this.leaveRequest.leaveTo = moment.utc(this.leaveRequest.leaveTo).add(3, 'day').toDate();
     } else if (this.leaveRequest.leaveFrom.getDay() === 6) {
-      this.leaveRequest.leaveFrom = moment(this.leaveRequest.leaveFrom).add(2, 'day').toDate();
-      this.leaveRequest.leaveTo = moment(this.leaveRequest.leaveTo).add(2, 'day').toDate();
+      this.leaveRequest.leaveFrom = moment.utc(this.leaveRequest.leaveFrom).add(2, 'day').toDate();
+      this.leaveRequest.leaveTo = moment.utc(this.leaveRequest.leaveTo).add(2, 'day').toDate();
     } else {
-      this.leaveRequest.leaveFrom = moment(this.leaveRequest.leaveFrom).add(1, 'day').toDate();
-      this.leaveRequest.leaveTo = moment(this.leaveRequest.leaveTo).add(1, 'day').toDate();
+      this.leaveRequest.leaveFrom = moment.utc(this.leaveRequest.leaveFrom).add(1, 'day').toDate();
+      this.leaveRequest.leaveTo = moment.utc(this.leaveRequest.leaveTo).add(1, 'day').toDate();
     }
   }
 
-  changeDaysTaken(): void {
+  // Change the number of days taken
+  changeDaysTaken() {
     let nb = 0;
-    let currentDate = moment(this.leaveRequest.leaveFrom).toDate();
-    const endDate = moment(this.leaveRequest.leaveTo).toDate();
-    for (let i = 0; currentDate <= endDate && i < 100; ++i) {
+    let currentDate = moment.utc(this.leaveRequest.leaveFrom, 'YYYY-MM-DD Z').toDate();
+    const endDate = moment.utc(this.leaveRequest.leaveTo, 'YYYY-MM-DD Z').toDate();
+    while (currentDate <= endDate) {
       // depend of first day of week. here, first day is Sunday == 0 and Saturday == 6
       if (currentDate.getDay() > 0 && currentDate.getDay() < 6) {
         ++nb;
       }
-      currentDate = moment(currentDate).add(1, 'day').toDate();
+      currentDate = moment.utc(currentDate).add(1, 'day').toDate();
     }
 
     this.leaveRequest.daysTaken = nb;
     this.setValidForm();
   }
 
-  changeMaxDate(): void {
-    this.maxDate = moment(this.leaveRequest.leaveFrom).toDate();
+  // Change the maximum date possible from the 'leavefrom' date
+  changeMaxDate() {
+    this.maxDate = moment.utc(this.leaveRequest.leaveFrom).toDate();
     for (let i = 1; i < this.userDaysLeft(); ++i) {
-      this.maxDate = moment(this.maxDate).add(1, 'day').toDate();
+      this.maxDate = moment.utc(this.maxDate).add(1, 'day').toDate();
       // depend of first day of week. here, first day is Sunday == 0 and Saturday == 6
       if (this.maxDate.getDay() === 0 || this.maxDate.getDay() === 6) {
         --i;
@@ -198,39 +227,32 @@ export class LeaveRequestComponent implements OnInit {
     }
   }
 
-  setDisabledDates(): void {
+  // Set the dates which are disabled (already taken)
+  setDisabledDates() {
     this.leaveRequestService.getAllDisabledDatesByLogin(this.sharedService.user.login).subscribe(requests => {
       if (requests.length > 0) {
         requests.forEach(date => {
-          this.disabledDates.push(moment(date).toDate());
+          this.disabledDates.push(moment.utc(date).toDate());
         });
       }
 
-      this.minDate = moment(this.leaveRequest.leaveFrom).toDate();
+      this.minDate = moment.utc(this.leaveRequest.leaveFrom).toDate();
       this.setValidForm();
     });
   }
 
-  addDisabledDates(startDate: Date, endDate: Date): void {
+  // Add the dates form the created leave request in the disabled dates array
+  addDisabledDates(startDate: Date, endDate: Date) {
     while (startDate <= endDate) {
-      this.disabledDates.push(startDate);
-      startDate = moment(startDate).add(1, 'day').toDate();
+      this.disabledDates.push(moment.utc(startDate).toDate());
+      startDate = moment.utc(startDate).add(1, 'day').toDate();
     }
     this.disabledDates.map(e => e);
   }
 
+  // Return true if the startdate or enddate are in the array of dates
   intersectDates(startDate: Date, endDate: Date, dates: Array<Date>): boolean {
-    const array: Date[] = Array<Date>();
-    while (startDate <= endDate) {
-      array.push(startDate);
-      startDate = moment(startDate).add(1, 'day').toDate();
-    }
-    for (let i = 0; i < array.length; ++i) {
-      if (dates.find(date => date.getDate() === array[i].getDate())) {
-        return true;
-      }
-    }
-    return false;
+    return dates.find(date => date.getDate() === startDate.getDate() && date.getDate() === endDate.getDate()) != null
   }
 
 }

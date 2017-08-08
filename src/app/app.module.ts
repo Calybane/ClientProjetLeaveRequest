@@ -25,6 +25,7 @@ import {RolesService} from './service/roles.service';
 import {LeaveRequestService} from './service/leave-request.service';
 import {ScheduleComponent} from './widget/schedule/schedule.component';
 import {SetupTableComponent} from './widget/setup-table/setup-table.component';
+import {HolidayService} from './service/holiday-service';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import {SetupTableComponent} from './widget/setup-table/setup-table.component';
     LeaveRequestService,
     UserService,
     RolesService,
+    HolidayService,
     AuthGuard,
     AuthenticationService
   ],

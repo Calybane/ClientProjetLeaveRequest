@@ -3,7 +3,7 @@ import {AuthenticationService} from '../../service/authentication.service';
 import {SharedService} from '../../service/shared.service';
 
 @Component({
-  selector: 'app-header',
+  selector: 'app-ptl-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
 import {LeaveRequest} from '../model/leave-request';
-import {LeaveRequestView} from '../view/leave-request-view';
+import {ScheduleEvent} from '../view/schedule-event';
 import {Observable} from 'rxjs/Observable';
 import {environment} from 'environments/environment';
 
@@ -25,15 +25,14 @@ export class LeaveRequestService {
       .catch(this.handleError);
   }
 
-
   public getAllLeaveRequests(): Observable<LeaveRequest[]> {
     return this.http.get(API_URL + '/api/leaverequest')
       .map(requests => requests.json())
       .catch(this.handleError);
   }
 
-
-  public getAllLeaveRequestsView(): Observable<LeaveRequestView[]> {
+  // Get all the leave request and parse them into a leave request view class (for the schedule)
+  public getAllScheduleEventLeaveRequest(): Observable<ScheduleEvent[]> {
     return this.http.get(API_URL + '/api/leaverequest/views')
       .map(requests => {
         return requests.json().map(request => {
@@ -52,13 +51,11 @@ export class LeaveRequestService {
       .catch(this.handleError);
   }
 
-
   public getAllLeaveRequestsByStatus(status: string, paging: string): Observable<any> {
     return this.http.get(API_URL + '/api/leaverequest/' + status + paging)
       .map(response => response.json())
       .catch(this.handleError);
   }
-
 
   public getAllLeaveRequestsByLogin(login: string, paging: string): Observable<any> {
     return this.http.get(API_URL + '/api/leaverequest/person/' + login + paging)
@@ -66,13 +63,11 @@ export class LeaveRequestService {
       .catch(this.handleError);
   }
 
-
   public getAllDisabledDatesByLogin(login: string): Observable <Date[]> {
     return this.http.get(API_URL + '/api/leaverequest/person/' + login + '/disableddates')
       .map(response => response.json())
       .catch(this.handleError);
   }
-
 
   public getLeaveRequestById(id: number): Observable<LeaveRequest> {
     return this.http.get(API_URL + '/api/leaverequest/' + id)
@@ -95,13 +90,11 @@ export class LeaveRequestService {
       .catch(this.handleError);
   }
 
-
   public createLeaveRequest(leave: LeaveRequest): Observable<boolean> {
     return this.http.post(API_URL + '/api/leaverequest', leave)
       .map(response => response)
       .catch(this.handleError);
   }
-
 
   public updateLeaveRequest(leave: LeaveRequest): Observable<LeaveRequest> {
     return this.http.put(API_URL + '/api/leaverequest/' + leave.id, leave)
@@ -124,14 +117,16 @@ export class LeaveRequestService {
       .catch(this.handleError);
   }
 
-
-  public deleteLeaveRequestById(id: number): Observable<null> {
+  public deleteLeaveRequestById(id: number): Observable<LeaveRequest> {
     return this.http.delete(API_URL + '/api/leaverequest/' + id)
-      .map(response => null)
+      .map(response => {
+        // If response is true, the request is deleted
+        return response.json();
+      })
       .catch(this.handleError);
   }
 
-
+  // Approve
   public approvedLeaveRequestByManager(leave: LeaveRequest): Observable<LeaveRequest> {
     return this.http.put(API_URL + '/api/leaverequest/' + leave.id + '/changestatus/approved/manager', leave)
       .map(response => {
@@ -152,7 +147,6 @@ export class LeaveRequestService {
       })
       .catch(this.handleError);
   }
-
 
   public approvedLeaveRequestByHR(leave: LeaveRequest): Observable<LeaveRequest> {
     return this.http.put(API_URL + '/api/leaverequest/' + leave.id + '/changestatus/approved/hr', leave)
@@ -175,7 +169,6 @@ export class LeaveRequestService {
       .catch(this.handleError);
   }
 
-
   public rejectedLeaveRequest(leave: LeaveRequest): Observable<LeaveRequest> {
     return this.http.put(API_URL + '/api/leaverequest/' + leave.id + '/changestatus/rejected', leave)
       .map(response => {
@@ -196,7 +189,6 @@ export class LeaveRequestService {
       })
       .catch(this.handleError);
   }
-
 
   private handleError (error: Response | any) {
     console.error('ApiLeaveRequestService::handleError', error);

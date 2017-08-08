@@ -3,7 +3,7 @@ import {SharedService} from './service/shared.service';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-ptl-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   encapsulation: ViewEncapsulation.None,
