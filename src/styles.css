@@ -65,7 +65,9 @@ div-user-info, div-date-info {
 .title{
   padding-left: 10px;
 }
-
+button.btn{
+  font-size: 1em;
+}
 
 /* DataTable */
 

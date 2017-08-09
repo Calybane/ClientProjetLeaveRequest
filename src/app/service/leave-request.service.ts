@@ -38,7 +38,7 @@ export class LeaveRequestService {
         return requests.json().map(request => {
           return {
             id: request.id,
-            title: request.login + ' : ' + request.description,
+            title: request.login + (request.description !== '' ? ' : ' + request.description : ''),
             start: moment(request.leaveFrom).format('YYYY-MM-DD'),
             end: moment(request.leaveTo).add(1, 'day').format('YYYY-MM-DD'),
             status: request.status,

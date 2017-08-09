@@ -46,7 +46,7 @@ export class LeaveRequestComponent implements OnInit {
       this.onChangeTypes();
     });
 
-    // Set the max dates possible
+    // Set the max date possible
     this.changeMaxDate();
 
     // Initialize the user connected, his roles and his disabled dates
@@ -119,12 +119,6 @@ export class LeaveRequestComponent implements OnInit {
     // Add the leave request to the db
     this.leaveRequestService.createLeaveRequest(this.leaveRequest).subscribe(request => {
       if (request) {
-        // Set the message on the screen
-        this.requestSubmitted = {
-          message: 'Request submitted',
-          style: 'alert alert-success'
-        };
-
         this.userService.getUserConnected().subscribe(response => {
           this.sharedService.user = response;
           this.setValidForm();
@@ -136,6 +130,12 @@ export class LeaveRequestComponent implements OnInit {
         // Reset the leave request instance
         this.initializeLeaveRequest();
         this.leaveRequest.typeAbsence = this.types[0].value;
+
+        // Set the message on the screen
+        this.requestSubmitted = {
+          message: 'Request submitted',
+          style: 'alert alert-success'
+        };
       } else {
         this.requestSubmitted = {
           message: 'The request is not valid',
@@ -215,7 +215,7 @@ export class LeaveRequestComponent implements OnInit {
     this.setValidForm();
   }
 
-  // Change the maximum date possible from the 'leavefrom' date
+  // Change the maximum date possible from the 'leavefrom' date, and ignoring weekends
   changeMaxDate() {
     this.maxDate = moment.utc(this.leaveRequest.leaveFrom).toDate();
     for (let i = 1; i < this.userDaysLeft(); ++i) {
