@@ -46,9 +46,6 @@ export class LeaveRequestComponent implements OnInit {
       this.onChangeTypes();
     });
 
-    // Set the max date possible
-    this.changeMaxDate();
-
     // Initialize the user connected, his roles and his disabled dates
     this.initialize();
   }
@@ -66,7 +63,7 @@ export class LeaveRequestComponent implements OnInit {
           this.leaveRequest.login = this.sharedService.user.login;
 
           // Set the disabled dates
-          this.setDisabledDates();
+          this.setDates();
         } else {
           // Return on the signin page
           console.log('User not connected');
@@ -81,7 +78,36 @@ export class LeaveRequestComponent implements OnInit {
       });
     } else {
       // Set the disabled dates
-      this.setDisabledDates();
+      this.setDates();
+    }
+  }
+
+  // Reset the leave request
+  initializeLeaveRequest() {
+    this.leaveRequest = {
+      id: null,
+      login: this.sharedService.user.login,
+      typeAbsence: '',
+      leaveFrom: moment.utc().toDate(),
+      leaveTo: moment.utc().toDate(),
+      daysTaken: 1,
+      requestDate: moment.utc().toDate(),
+      approvalManagerDate: null,
+      approvalHRDate: null,
+      status: '',
+      description: ''
+    };
+
+    // Set the dates of the leave request to the next open day
+    if (this.leaveRequest.leaveFrom.getDay() === 5) {
+      this.leaveRequest.leaveFrom = moment(this.leaveRequest.leaveFrom).add(3, 'day').toDate();
+      this.leaveRequest.leaveTo = moment(this.leaveRequest.leaveTo).add(3, 'day').toDate();
+    } else if (this.leaveRequest.leaveFrom.getDay() === 6) {
+      this.leaveRequest.leaveFrom = moment(this.leaveRequest.leaveFrom).add(2, 'day').toDate();
+      this.leaveRequest.leaveTo = moment(this.leaveRequest.leaveTo).add(2, 'day').toDate();
+    } else {
+      this.leaveRequest.leaveFrom = moment(this.leaveRequest.leaveFrom).add(1, 'day').toDate();
+      this.leaveRequest.leaveTo = moment(this.leaveRequest.leaveTo).add(1, 'day').toDate();
     }
   }
 
@@ -99,8 +125,7 @@ export class LeaveRequestComponent implements OnInit {
     }
   }
 
-  // Return the number of days left from the connected user
-  userDaysLeft(): number {
+  getUserDaysLeft(): number {
     return this.sharedService.user.daysLeft;
   }
 
@@ -108,7 +133,7 @@ export class LeaveRequestComponent implements OnInit {
   leaveRequestValid(): boolean {
     return moment.utc(this.leaveRequest.leaveFrom) <= moment.utc(this.leaveRequest.leaveTo)
       && this.leaveRequest.daysTaken > 0
-      && this.leaveRequest.daysTaken <= this.userDaysLeft()
+      && this.leaveRequest.daysTaken <= this.getUserDaysLeft()
       && !this.intersectDates(moment.utc(this.leaveRequest.leaveFrom).toDate(),
                               moment.utc(this.leaveRequest.leaveTo).toDate(),
                               this.disabledDates);
@@ -150,30 +175,11 @@ export class LeaveRequestComponent implements OnInit {
     });
   }
 
-  // Reset the leave request
-  initializeLeaveRequest() {
-    this.leaveRequest = {
-      id: null,
-      login: this.sharedService.user.login,
-      typeAbsence: '',
-      leaveFrom: moment.utc().toDate(),
-      leaveTo: moment.utc().toDate(),
-      daysTaken: 1,
-      requestDate: moment.utc().toDate(),
-      approvalManagerDate: null,
-      approvalHRDate: null,
-      status: '',
-      description: ''
-    };
-
-    this.setDates();
-  }
-
   // Set the variable to enable or disable the submit button
   setValidForm() {
     this.validForm = moment.utc(this.leaveRequest.leaveFrom) <= moment.utc(this.leaveRequest.leaveTo)
-      && this.userDaysLeft() > 0
-      && this.leaveRequest.daysTaken <= this.userDaysLeft()
+      && this.getUserDaysLeft() > 0
+      && this.leaveRequest.daysTaken <= this.getUserDaysLeft()
       && !this.intersectDates(moment.utc(this.leaveRequest.leaveFrom).toDate(),
                               moment.utc(this.leaveRequest.leaveTo).toDate(),
                               this.disabledDates);
@@ -184,25 +190,11 @@ export class LeaveRequestComponent implements OnInit {
     this.showWellSpecial = (this.leaveRequest.typeAbsence === 'Special leave');
   }
 
-  // Set the dates of the leave request to the next open day
-  setDates() {
-    if (this.leaveRequest.leaveFrom.getDay() === 5) {
-      this.leaveRequest.leaveFrom = moment.utc(this.leaveRequest.leaveFrom).add(3, 'day').toDate();
-      this.leaveRequest.leaveTo = moment.utc(this.leaveRequest.leaveTo).add(3, 'day').toDate();
-    } else if (this.leaveRequest.leaveFrom.getDay() === 6) {
-      this.leaveRequest.leaveFrom = moment.utc(this.leaveRequest.leaveFrom).add(2, 'day').toDate();
-      this.leaveRequest.leaveTo = moment.utc(this.leaveRequest.leaveTo).add(2, 'day').toDate();
-    } else {
-      this.leaveRequest.leaveFrom = moment.utc(this.leaveRequest.leaveFrom).add(1, 'day').toDate();
-      this.leaveRequest.leaveTo = moment.utc(this.leaveRequest.leaveTo).add(1, 'day').toDate();
-    }
-  }
-
   // Change the number of days taken
   changeDaysTaken() {
     let nb = 0;
-    let currentDate = moment.utc(this.leaveRequest.leaveFrom, 'YYYY-MM-DD Z').toDate();
-    const endDate = moment.utc(this.leaveRequest.leaveTo, 'YYYY-MM-DD Z').toDate();
+    let currentDate = moment(this.leaveRequest.leaveFrom.setHours(0, 0, 0, 0)).toDate();
+    const endDate = moment(this.leaveRequest.leaveTo.setHours(0, 0, 0, 0)).toDate();
     while (currentDate <= endDate) {
       // depend of first day of week. here, first day is Sunday == 0 and Saturday == 6
       if (currentDate.getDay() > 0 && currentDate.getDay() < 6) {
@@ -217,8 +209,8 @@ export class LeaveRequestComponent implements OnInit {
 
   // Change the maximum date possible from the 'leavefrom' date, and ignoring weekends
   changeMaxDate() {
-    this.maxDate = moment.utc(this.leaveRequest.leaveFrom).toDate();
-    for (let i = 1; i < this.userDaysLeft(); ++i) {
+    this.maxDate = moment.utc(this.leaveRequest.leaveFrom.setHours(0, 0, 0, 0)).toDate();
+    for (let i = 1; i < this.getUserDaysLeft(); ++i) {
       this.maxDate = moment.utc(this.maxDate).add(1, 'day').toDate();
       // depend of first day of week. here, first day is Sunday == 0 and Saturday == 6
       if (this.maxDate.getDay() === 0 || this.maxDate.getDay() === 6) {
@@ -228,7 +220,7 @@ export class LeaveRequestComponent implements OnInit {
   }
 
   // Set the dates which are disabled (already taken)
-  setDisabledDates() {
+  setDates() {
     this.leaveRequestService.getAllDisabledDatesByLogin(this.sharedService.user.login).subscribe(requests => {
       if (requests.length > 0) {
         requests.forEach(date => {
@@ -236,7 +228,12 @@ export class LeaveRequestComponent implements OnInit {
         });
       }
 
+      // Set the minimum date possible
       this.minDate = moment.utc(this.leaveRequest.leaveFrom).toDate();
+
+      // Set the maximum date possible
+      this.changeMaxDate();
+
       this.setValidForm();
     });
   }

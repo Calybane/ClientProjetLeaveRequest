@@ -4,11 +4,11 @@
 
     <br>
 
-    <div *ngIf="userDaysLeft() < 1" class="alert alert-warning">
-      <strong>Attention! </strong> You have {{userDaysLeft()}} days left, you can not create a new leave request.
+    <div *ngIf="getUserDaysLeft() < 1" class="alert alert-warning">
+      <strong>Attention! </strong> You have {{getUserDaysLeft()}} days left, you can not create a new leave request.
     </div>
 
-    <form #f="ngForm" (ngSubmit)="onSubmit()" ngNativeValidate class="formRequest row" *ngIf="userDaysLeft() > 0">
+    <form #f="ngForm" (ngSubmit)="onSubmit()" ngNativeValidate class="formRequest row" *ngIf="getUserDaysLeft() > 0">
 
       <div class="form-group">
         <label>Please choose type of absence :</label><br>
@@ -25,13 +25,13 @@
           <div class="col-sm-6 nopadding">
             <label>From :</label>
             <br>
-            <p-calendar dateFormat="dd/mm/yy" name="startDate" [disabledDates]="disabledDates" [disabledDays]="[0,6]" (onClose)="changeDaysTaken(); changeMaxDate();" [(ngModel)]="leaveRequest.leaveFrom" [minDate]="minDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="2017:2030" required></p-calendar>
+            <p-calendar dateFormat="dd/mm/yy" name="startDate" [showIcon]="true" [disabledDates]="disabledDates" [disabledDays]="[0,6]" (onClose)="changeDaysTaken(); changeMaxDate();" [(ngModel)]="leaveRequest.leaveFrom" [minDate]="minDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="2017:2030" required></p-calendar>
           </div>
 
           <div class="col-sm-6 nopadding">
             <label>To (incl.) :</label>
             <br>
-            <p-calendar dateFormat="dd/mm/yy" name="endDate" [disabledDates]="disabledDates" [disabledDays]="[0,6]" (onClose)="changeDaysTaken();" [(ngModel)]="leaveRequest.leaveTo" [minDate]="leaveRequest.leaveFrom" [maxDate]="maxDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="2017:2030" required></p-calendar>
+            <p-calendar dateFormat="dd/mm/yy" name="endDate" [showIcon]="true" [disabledDates]="disabledDates" [disabledDays]="[0,6]" (onClose)="changeDaysTaken();" [(ngModel)]="leaveRequest.leaveTo" [minDate]="leaveRequest.leaveFrom" [maxDate]="maxDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="2017:2030" required></p-calendar>
           </div>
         </div>
 
@@ -42,7 +42,7 @@
           </div>
         </div>
 
-        <div *ngIf="(userDaysLeft() - leaveRequest.daysTaken) < 0">
+        <div *ngIf="(getUserDaysLeft() - leaveRequest.daysTaken) < 0">
           <br>
           <div class="alert alert-danger">
             <strong>Attention! </strong>The number of days left are incorrect.
@@ -55,7 +55,7 @@
       </div>
 
       <div class="form-group">
-        <label>Number of annual leave days left :</label> {{userDaysLeft() - leaveRequest.daysTaken}}
+        <label>Number of annual leave days left :</label> {{getUserDaysLeft() - leaveRequest.daysTaken}}
       </div>
 
       <div class="form-group">

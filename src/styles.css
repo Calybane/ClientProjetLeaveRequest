@@ -68,6 +68,10 @@ div-user-info, div-date-info {
 button.btn{
   font-size: 1em;
 }
+.form-group .ui-calendar button{
+  width: 3em;
+  border-radius: 0 0.25em 0.25em 0;
+}
 
 /* DataTable */
 
