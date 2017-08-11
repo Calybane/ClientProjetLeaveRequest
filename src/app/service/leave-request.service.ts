@@ -40,7 +40,7 @@ export class LeaveRequestService {
 
   // Get all the leave request and parse them into a schedule event class (for the schedule)
   public getAllScheduleEventLeaveRequest(): Observable<ScheduleEvent[]> {
-    return this.http.get(API_URL + '/api/leaverequest')
+    return this.http.get(API_URL + '/api/leaverequest/schedule')
       .map(requests => {
         return requests.json().map(request => {
           return {

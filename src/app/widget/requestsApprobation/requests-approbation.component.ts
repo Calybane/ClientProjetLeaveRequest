@@ -93,4 +93,13 @@ export class RequestsApprobationComponent implements OnInit {
   hasRole(role: string): boolean {
     return this.sharedService.hasRole(role);
   }
+
+  // Return a style class about the request's status
+  getStyleClass(row: LeaveRequest): string {
+    if (row.status === 'Rejected') {
+      return 'bg-danger text-white';
+    } else if (row.status === 'Approved') {
+      return 'bg-success text-white';
+    }
+  }
 }

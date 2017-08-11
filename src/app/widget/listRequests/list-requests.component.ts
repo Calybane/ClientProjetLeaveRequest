@@ -93,11 +93,9 @@ export class ListRequestsComponent implements OnInit {
 
   // Return a style class about the request's status
   getStyleClass(row: LeaveRequest): string {
-    if (row.status.startsWith('Rejected')) {
+    if (row.status === 'Rejected') {
       return 'bg-danger text-white';
-    } else if (row.status === 'Approved by manager') {
-      return 'bg-warning text-white';
-    } else if (row.status === 'Approved by HR') {
+    } else if (row.status === 'Approved') {
       return 'bg-success text-white';
     }
   }

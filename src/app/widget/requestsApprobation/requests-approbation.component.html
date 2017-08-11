@@ -33,7 +33,7 @@
 
         <p-column field="status" header="Status">
           <ng-template let-col let-row="rowData" let-ri="rowIndex" pTemplate="body">
-            <span>{{row.status}}</span>
+            <div [class]="getStyleClass(row)">{{row.status}}</div>
           </ng-template>
         </p-column>
 
