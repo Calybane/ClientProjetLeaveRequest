@@ -92,8 +92,7 @@ export class LeaveRequestComponent implements OnInit {
       leaveTo: moment.utc().toDate(),
       daysTaken: 1,
       requestDate: moment.utc().toDate(),
-      approvalManagerDate: null,
-      approvalHRDate: null,
+      approvalDate: null,
       status: '',
       description: ''
     };

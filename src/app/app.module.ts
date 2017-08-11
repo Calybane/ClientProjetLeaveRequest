@@ -3,7 +3,14 @@ import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
-import {CalendarModule, DataTableModule, DialogModule, ScheduleModule, SelectButtonModule} from 'primeng/primeng';
+import {
+  CalendarModule,
+  DataTableModule,
+  DialogModule,
+  DropdownModule,
+  ScheduleModule,
+  SelectButtonModule
+} from 'primeng/primeng';
 
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './widget/header/header.component';
@@ -26,6 +33,7 @@ import {LeaveRequestService} from './service/leave-request.service';
 import {ScheduleComponent} from './widget/schedule/schedule.component';
 import {SetupTableComponent} from './widget/setup-table/setup-table.component';
 import {HolidayService} from './service/holiday-service';
+import { DashboardComponent } from './widget/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +45,8 @@ import {HolidayService} from './service/holiday-service';
     RequestsApprobationComponent,
     SigninComponent,
     ScheduleComponent,
-    SetupTableComponent
+    SetupTableComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -50,6 +59,7 @@ import {HolidayService} from './service/holiday-service';
     SelectButtonModule,
     DataTableModule,
     DialogModule,
+    DropdownModule,
     RouterModule.forRoot(ROUTES)
   ],
   providers: [

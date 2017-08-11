@@ -7,8 +7,7 @@ export interface LeaveRequest {
   leaveTo: Date;
   daysTaken: number;
   requestDate: Date;
-  approvalManagerDate: Date;
-  approvalHRDate: Date;
+  approvalDate: Date;
   status: string;
   description: string;
 }
