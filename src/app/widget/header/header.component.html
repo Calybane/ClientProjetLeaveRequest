@@ -23,9 +23,10 @@
           <ul class="dropdown-menu">
             <li><a class="link" routerLink="/request">Leave Request Form</a></li>
             <li><a class="link" routerLink="/list">List of my requests</a></li>
-            <li *ngIf="!isSimpleUser()"><a class="link" routerLink="/approval">Requests for approval</a></li>
+            <li *ngIf="!isSimpleUser()"><a class="link" routerLink="/approval">Approval of requests</a></li>
           </ul>
         </li>
+        <li *ngIf="!isSimpleUser()"><a class="link" routerLink="/dashboard">Dashboard</a></li>
         <li><a class="link" routerLink="/schedule"><span class="glyphicon glyphicon-calendar"></span> Calendar</a></li>
         <li><a *ngIf="isHR()" class="link" routerLink="/setuptable"><span class="glyphicon glyphicon-cog"></span> Setup Table</a></li>
       </ul>

@@ -10,6 +10,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
 import * as moment from 'moment';
+import {LeaveRequestView} from '../view/leave-request-view';
 
 const API_URL = environment.apiUrl;
 
@@ -31,9 +32,15 @@ export class LeaveRequestService {
       .catch(this.handleError);
   }
 
-  // Get all the leave request and parse them into a leave request view class (for the schedule)
-  public getAllScheduleEventLeaveRequest(): Observable<ScheduleEvent[]> {
+  public getAllLeaveRequestsView(): Observable<any> {
     return this.http.get(API_URL + '/api/leaverequest/views')
+      .map(requests => requests.json())
+      .catch(this.handleError);
+  }
+
+  // Get all the leave request and parse them into a schedule event class (for the schedule)
+  public getAllScheduleEventLeaveRequest(): Observable<ScheduleEvent[]> {
+    return this.http.get(API_URL + '/api/leaverequest')
       .map(requests => {
         return requests.json().map(request => {
           return {
@@ -42,7 +49,7 @@ export class LeaveRequestService {
             start: moment(request.leaveFrom).format('YYYY-MM-DD'),
             end: moment(request.leaveTo).add(1, 'day').format('YYYY-MM-DD'),
             status: request.status,
-            color: (request.status.startsWith('Waiting') ? '#9e9e9e' : (request.status === 'Approved by manager' ? '#ff9900' : '#339933')),
+            color: (request.status.startsWith('Waiting') ? '#9e9e9e' : '#339933'),
             author: request.login,
             description: request.description
           };
@@ -52,7 +59,7 @@ export class LeaveRequestService {
   }
 
   public getAllLeaveRequestsByStatus(status: string, paging: string): Observable<any> {
-    return this.http.get(API_URL + '/api/leaverequest/' + status + paging)
+    return this.http.get(API_URL + '/api/leaverequest/status/' + status + paging)
       .map(response => response.json())
       .catch(this.handleError);
   }
@@ -81,8 +88,7 @@ export class LeaveRequestService {
           leaveTo: request.leaveTo,
           daysTaken: request.daysTaken,
           requestDate: request.requestDate,
-          approvalManagerDate: request.approvalManagerDate,
-          approvalHRDate: request.approvalHRDate,
+          approvalDate: request.approvalDate,
           status: request.status,
           description: request.description
         };
@@ -108,8 +114,7 @@ export class LeaveRequestService {
           leaveTo: request.leaveTo,
           daysTaken: request.daysTaken,
           requestDate: request.requestDate,
-          approvalManagerDate: request.approvalManagerDate,
-          approvalHRDate: request.approvalHRDate,
+          approvalDate: request.approvalDate,
           status: request.status,
           description: request.description
         };
@@ -126,9 +131,8 @@ export class LeaveRequestService {
       .catch(this.handleError);
   }
 
-  // Approve
-  public approvedLeaveRequestByManager(leave: LeaveRequest): Observable<LeaveRequest> {
-    return this.http.put(API_URL + '/api/leaverequest/' + leave.id + '/changestatus/approved/manager', leave)
+  public approvedLeaveRequest(leave: LeaveRequest): Observable<LeaveRequest> {
+    return this.http.put(API_URL + '/api/leaverequest/' + leave.id + '/changestatus/approved', leave)
       .map(response => {
         const request = response.json();
         return {
@@ -139,29 +143,7 @@ export class LeaveRequestService {
           leaveTo: request.leaveTo,
           daysTaken: request.daysTaken,
           requestDate: request.requestDate,
-          approvalManagerDate: request.approvalManagerDate,
-          approvalHRDate: request.approvalHRDate,
-          status: request.status,
-          description: request.description
-        };
-      })
-      .catch(this.handleError);
-  }
-
-  public approvedLeaveRequestByHR(leave: LeaveRequest): Observable<LeaveRequest> {
-    return this.http.put(API_URL + '/api/leaverequest/' + leave.id + '/changestatus/approved/hr', leave)
-      .map(response => {
-        const request = response.json();
-        return {
-          id: request.id,
-          login: request.login,
-          typeAbsence: request.typeAbsence,
-          leaveFrom: request.leaveFrom,
-          leaveTo: request.leaveTo,
-          daysTaken: request.daysTaken,
-          requestDate: request.requestDate,
-          approvalManagerDate: request.approvalManagerDate,
-          approvalHRDate: request.approvalHRDate,
+          approvalDate: request.approvalDate,
           status: request.status,
           description: request.description
         };
@@ -181,8 +163,7 @@ export class LeaveRequestService {
           leaveTo: request.leaveTo,
           daysTaken: request.daysTaken,
           requestDate: request.requestDate,
-          approvalManagerDate: request.approvalManagerDate,
-          approvalHRDate: request.approvalHRDate,
+          approvalDate: request.approvalDate,
           status: request.status,
           description: request.description
         };

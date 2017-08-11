@@ -7,6 +7,7 @@ import {SigninComponent} from './widget/signin/signin.component';
 import {ScheduleComponent} from './widget/schedule/schedule.component';
 import {AuthGuard} from './app.authGuard';
 import {SetupTableComponent} from './widget/setup-table/setup-table.component';
+import {DashboardComponent} from './widget/dashboard/dashboard.component';
 
 export const ROUTES: Routes = [
   {
@@ -43,6 +44,11 @@ export const ROUTES: Routes = [
   {
     path: 'setuptable',
     component: SetupTableComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
     canActivate: [AuthGuard]
   },
   {

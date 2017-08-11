@@ -20,7 +20,7 @@ export class HeaderComponent implements OnInit {
   }
 
   isPageSignIn(): boolean {
-    return this.sharedService.pageSignin;
+    return this.sharedService.pageSignIn;
   }
 
   hasRole(role: string): boolean {
