@@ -8,8 +8,13 @@
     <artifactId>LeaveRequestAngular</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-  <name>LeaveRequestAngular</name>
-  <description>Angular 2 - Leave Request</description>
+    <name>LeaveRequestAngular</name>
+    <description>Angular 2 - Leave Request</description>
 
+    <parent>
+        <groupId>com.pictet.ptl.leaverequest</groupId>
+        <artifactId>LeaveRequestProject</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
 
 </project>
